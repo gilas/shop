@@ -1,0 +1,11 @@
+#basic-modal-content {display:none;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000; opacity: 0.7; }
+
+/* Container */
+#simplemodal-container {display:table; background-color: #FFFFFF; border-radius: 3px 3px 3px 3px; border:1px solid #444; padding:12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);}
+#simplemodal-container .simplemodal-data {padding:8px;}
+#simplemodal-container code {background:#141414; border-left:3px solid #65B43D; color:#bbb; display:block; font-size:12px; margin-bottom:12px; padding:4px 6px 6px;}
+#simplemodal-container a.modalCloseImg {background:url(../img/modal/x.png) no-repeat; width:29px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+#simplemodal-container h3 {color:#84b8d9;}

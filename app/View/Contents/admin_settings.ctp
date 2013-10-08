@@ -1,0 +1,1 @@
+<?php echo $this->requestAction(array('controller' => 'settings', 'action' => 'index', 'section' => 'Content'), array('layout' => 'iframe' ,'return')); ?>

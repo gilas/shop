@@ -1,0 +1,27 @@
+body{
+    font-family: tahoma;
+    font-size: 13px;
+    width:95%;
+    line-height: 23px;
+    margin: 10px auto;
+    display:table;
+    direction: rtl;
+}
+.center{
+    margin: 0 auto;
+    display:table;
+}
+.para{
+    text-indent: 20px;
+    margin-top: 20px;
+}
+.para *{
+    font-size: 12px;
+}
+/**
+.page{
+    margin: 10px 0;
+    height: 1087px;
+    width: 753px;
+}
+*/

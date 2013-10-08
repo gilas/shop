@@ -1,0 +1,43 @@
+input[type=text],input[type=password]{
+    min-width: 100px;
+}
+.dropdown{
+    z-index:999
+}
+table{
+    text-align: right;
+}
+button{
+    height: 25px;
+}
+input[type=submit]{
+    padding-right: 0 !important;
+}
+.user-bar #toolbar{
+    float:none;
+}
+#center{
+    width:auto;
+}
+#menu ul{
+    top: auto;
+    right:auto;
+    float:left;
+    padding:0px;
+    margin:0px;
+    visibility: hidden;
+    position: relative;
+    z-index: 10;
+    
+}
+
+table td input{
+    zoom:1;
+    display:inline-table;
+    width:auto !important;
+}
+.toolmenu {
+    width:auto !important;
+    zoom:1;
+    display:inline-table;
+}

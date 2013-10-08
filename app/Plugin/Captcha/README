@@ -1,0 +1,40 @@
+Installation
+
+1) Copy Captcha/ in Plugin/ path
+
+2) Create below function in AppController
+
+public function captcha()  {
+    $this->autoRender = false;
+    $this->layout='ajax';
+    if(!isset($this->Captcha))   { //if Component was not loaded throug $components array()
+        App::import('Component','Captcha.Captcha'); //load it
+        $this->Captcha = new CaptchaComponent($this->Components); //make instance
+    }
+    $this->Captcha->create(100,30,6);
+} 
+
+*********************************************
+
+4) load Captcha Component in Controller that has captcha
+
+public $components = array('Captcha.Captcha');
+
+*********************************************
+
+3) load Captcha Helper in action
+
+$this->helpers[] = 'Captcha.Captcha';
+
+*********************************************
+
+4) load Captcha image in action view
+
+$this->Captcha->showCaptcha()
+
+*********************************************
+
+5) Using below method for checking Captcha
+
+$this->Captcha->check($this->data['User']['captcha'])
+
