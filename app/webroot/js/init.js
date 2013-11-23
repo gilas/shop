@@ -25,6 +25,21 @@ function alert(message) {
 		}
 	})
 }
+function alertError(message) {
+	$.fallr({
+		content: message,
+        icon : 'error',
+        buttons: {
+			button1: {
+				text: "قبول",
+				danger: false,
+				onclick: function() {
+					$.fallr("hide")
+				}
+			}
+		}
+	})
+}
 $(function(){
     // Show pop uo window for popup links
     $('.popup-link').click(function(){

@@ -1,0 +1,40 @@
+.categories{
+    display: block;
+}
+.category{
+    background-color: #F7F7F7;
+    border: 1px solid #B3B3B3;
+    display: inline-table;
+    height: 44px;
+    margin: 3px;
+    padding: 10px;
+    text-align: center;
+    width: 79px;
+}
+.stuffs{
+    display: block;
+}
+.stuff{
+    border: 1px solid #B3B3B3;
+    margin: 3px;
+    padding: 10px;
+    display: inline-block;
+}
+
+.stuff-detail td{
+    padding: 10px 0;
+}
+
+.listCategory li{
+    margin-right: 10px !important;
+    list-style-type: none;
+}
+.old-price{
+    text-decoration:line-through;
+    color:red;
+    padding-left:10px;
+}
+.new-price{
+    color:green;
+    padding-left:10px;
+}

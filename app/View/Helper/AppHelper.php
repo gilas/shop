@@ -102,4 +102,45 @@ class AppHelper extends Helper {
         $this->scriptBlock('$(function(){$("#'.$id.'").qtip({content: "'.$message.'",position: {corner: {tooltip: "bottomMiddle",target: "topLeft"}},show: "mouseover",hide: "mouseout",style: {lineHeight:1.5, textAlign: "right",tip: true,name: "blue"}});})',array('inline' => false));
         return $this->image('icons/info.png',array('id' => $id, 'style' => 'width:15px; margin: 0 5px;'));
     }
+    
+    /**
+     * Generate recursive menu items
+     *
+     * @param array  $menus       : items
+     * @param string $activeStyle : class attribute for active item
+     * @return ul li tag
+     */
+    public function generateList($list, $showField , $url = null,$activeStyle = null, $optionUL = null) {
+        if(! is_a($this,'HtmlHelper')){
+            return;
+        }
+        $fields = explode('.', $showField);
+        $output = null;
+        $selected = null;
+        if ($list) {
+            foreach ($list as $item) {
+                $child = null;
+                $class = null;
+                if ($item['children']) {
+                    $child = $this->generateList($item['children'], $showField, $url, $activeStyle);
+                }
+                $parent = $item[$fields[0]][$fields[1]];
+                $link = null;
+                if($url){
+                    $link = array_merge($url, array($item[$fields[0]]['id']));
+                    $parent = $this->link($parent, $link);
+                }
+                $here = $this->request->here();
+                $urlLink = Router::url($link);
+                if($here == $urlLink){
+                    $selected = 'selectedList';
+                }
+                $output .= $this->tag('li', $parent . $child);
+            }
+        }
+        if($selected){
+            return $this->tag('ul', $output, Set::merge($optionUL, array('id' => $selected)) );
+        }
+        return $this->tag('ul', $output, $optionUL);
+    }
 }

@@ -8,7 +8,7 @@ switch(AuthComponent::user('Role.name')){
 		echo '
 		<div id="toolbar" class="profile-toolbar">
 			<ul id="menu">
-				<li><a href="'.$this->Html->url(array('controller' => 'Dashboards', 'action' => 'index', 'admin' => true)).'">داشبورد</a></li>
+				<li><a href="'.$this->Html->url(array('controller' => 'Dashboards', 'action' => 'index', 'admin' => true, 'plugin' => false)).'">داشبورد</a></li>
 				<li><a href="'.$this->Html->url(array('controller' => 'Users', 'action' => 'logout')).'">خروج</a></li>
 			</ul>
 		</div>

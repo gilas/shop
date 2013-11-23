@@ -129,6 +129,9 @@ class AdminFormHelper extends AppHelper{
         if(!empty($url['normalLink']) or is_string($url)){
             if(is_array($url)){
                 unset($url['normalLink']);
+                if (!empty($this->request->named['layout'])) {
+                    $url['layout'] = 'iframe';
+                }
             }
             if(!empty($childs)){
                 $ul = $this->Html->tag('ul',$childs, array('class' => 'dropdown-menu'));
@@ -137,7 +140,7 @@ class AdminFormHelper extends AppHelper{
                 $link = $this->Html->link($title, $url,$options);
                 return $link . $ul;
             }
-                return $this->Html->link($title, $url,$options); 
+            return $this->Html->link($title, $url,$options); 
         }
         
         // iframe Link
@@ -161,6 +164,9 @@ class AdminFormHelper extends AppHelper{
             if(! empty($extraField)){
                 $url['extraField'] = $extraField;
             }
+            if (!empty($this->request->named['layout'])) {
+                    $url['layout'] = 'iframe';
+                }
             
         }  
         $url = json_encode($url);

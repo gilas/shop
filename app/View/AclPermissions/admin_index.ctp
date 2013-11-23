@@ -28,7 +28,7 @@ foreach($acos as  $aco_id => $aco){
 echo $this->AdminForm->startFormTag('AclPermission');
 ?>
 <div class="tabbable tabs-right">
-    <ul class="nav nav-tabs" style="margin-left: 0;height: 450px;overflow-y: scroll;overflow-x: hidden;">
+    <ul class="nav nav-tabs" style="margin-left: 0;overflow: hidden;">
         <?php $flag = true; foreach($actions as $controller => $action): ?>
             <li <?php if($flag){echo 'class="active"';$flag = false;} ?> ><a data-toggle="tab" href="#<?php echo $controller?>"><?php echo $controller?></a></li>
         <?php endforeach; ?>

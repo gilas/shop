@@ -67,7 +67,7 @@ class DATABASE_CONFIG {
         'host' => 'localhost',
         'login' => 'root',
         'password' => '',
-        'database' => 'mosafer_behesht',
+        'database' => 'shop',
         'prefix' => 'gl_',
         'encoding' => 'utf8',
     );

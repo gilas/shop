@@ -209,9 +209,9 @@ class FilterHelper extends AppHelper{
             return;
         }
         if($this->paginParams['paramType'] == 'named'){
-            $this->Paginator->options(array('url' => $this->request->named));
+            $this->Paginator->options(array('url' => array_merge($this->request->named, $this->request->pass)));
         }else{
-            $this->Paginator->options(array('url' => array('?' => $this->request->query)));
+            $this->Paginator->options(array('url' => array_merge($this->request->pass, array('?' => $this->request->query))));
         }
         if($options){
             $this->Paginator->options($options);

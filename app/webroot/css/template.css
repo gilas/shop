@@ -476,3 +476,12 @@ th a.desc:after{
 .nav-header{
     font-size: 15px;
 }
+.checkbox-column{
+    width:21px !important;
+}
+.row-column{
+    width:21px !important;
+}
+.published-column{
+    width:60px !important;
+}

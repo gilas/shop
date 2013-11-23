@@ -1,5 +1,5 @@
 <?php
-$crumbs = $this->Html->getCrumbs('&ac;',array('text' => 'داشبورد', 'url' => array('controller' => 'Dashboards', 'action' => 'index') ));
+$crumbs = $this->Html->getCrumbs('&ac;',array('text' => 'داشبورد', 'url' => array('controller' => 'Dashboards', 'action' => 'index', 'plugin' => false) ));
 $crumbs = explode('&ac;',$crumbs);
 
 // only has Dashboard link

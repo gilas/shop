@@ -68,6 +68,7 @@ class AclPermissionsController extends AppController{
     }
     
     public function admin_sync(){
+        set_time_limit(300);
         $this->AclGenerate = $this->Components->load('AclGenerate');
         $this->AclGenerate->initialize($this);
         $this->AclGenerate->aco_sync();

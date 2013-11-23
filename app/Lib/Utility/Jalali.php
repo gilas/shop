@@ -284,7 +284,10 @@ class Jalali {
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
  */
     public static function niceShort($dateString, $showTime = true){
-        $date = $dateString ? self::fromString($dateString) : time();
+        if(empty($dateString)){
+            return '';
+        }
+        $date = self::fromString($dateString);
 
 		$y = self::isThisYear($date) ? '' : 'Y';
 		if (self::isToday($dateString)) {

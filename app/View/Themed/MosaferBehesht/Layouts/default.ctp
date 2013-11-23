@@ -12,16 +12,19 @@
             echo $this->Html->css('bootstrap-responsive.min');
             echo $this->Html->css('template');
             echo $this->Html->css(array('style','menu'));
+            echo $this->Html->css('fancybox');
             echo $this->Html->css('box');
             echo $this->fetch('css');
             echo $this->Html->script(array('modernizr', 'jquery', 'jquery-ui',));
             echo $this->Html->script('bootstrap');
             echo $this->Html->script('init');
             echo $this->Html->script('box');
+            echo $this->Html->script('fancybox');
+            
             ?>
             <!--[if lt IE 9]><?php echo $this->Html->script(array('IE8', 'ie')); ?><![endif]-->
             <?php
-            echo $this->Html->script(array('toolbar','select','tab','checkbox_radio'));
+            echo $this->Html->script(array('toolbar','tab','checkbox_radio'));
             echo $this->fetch('script');
             ?>
             <title><?php echo $title_for_layout; ?></title>
@@ -35,19 +38,15 @@
                         <?php //echo $this->element('messages'); ?>
                     </div>
                     <div class="left">
-                        <span class="languages">
-                            <?php echo $this->Html->link('فارسی',''); ?> |
-                            <?php echo $this->Html->link('انگلیسی',''); ?> |
-                            <?php echo $this->Html->link('عربی',''); ?>
-                        </span>
                         <?php echo Jalali::date('l d F Y'); ?>
                     </div>
                 </div>
                 <div id="header"></div>
                 <div class="user-bar"><?php echo $this->element('firstBar'); ?></div>
-                <?php echo $this->element('breadcrumb'); ?>
                 <div id="center">
+                    <div id="right-content"><?php echo $this->element('right'); ?></div>
                     <div id="content">
+                        <?php echo $this->element('breadcrumb'); ?>
                         <?php echo $this->Session->flash('auth'); ?>
                         <?php echo $this->Session->flash(); ?>
                         <?php echo $this->element('slider'); ?>
@@ -71,8 +70,6 @@
 						});
 
 					});
-        $('select[rel!="no-style"]').chosen({allow_single_deselect: true})
-        $('select[rel="no-search"]').next().find("input").remove()
         $(".tabbed").each(function(){$(this).createTabs()})
     })
 </script>

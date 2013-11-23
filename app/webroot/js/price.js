@@ -1,3 +1,31 @@
+function getPrice(val){
+    value = val.toString()
+    value = value.replace(/,/g,'')
+    oldValue = ''
+    for(i = value.length - 1; i >= 0 ; i--){
+        oldValue += value[i]
+    }
+    value = oldValue;
+    newValue = ''
+    for(i = 0; i< value.length; i++){
+        if(i%3 == 0 && i != 0){
+            newValue += ','
+        }
+        newValue += value[i]
+    }
+    oldValue = ''
+    for(i = newValue.length - 1; i >= 0 ; i--){
+        oldValue += newValue[i]
+    }
+    newValue = oldValue;
+    return newValue;
+}
+
+function removePrice(val){
+    val = val.toString()
+    val = val.replace(/,/g,'')
+    return val
+}
 jQuery(function() {
      $('input.price').keyup(function(){
         value = $(this).val()

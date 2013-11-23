@@ -1,0 +1,1 @@
+<a href="<?php echo $this->Html->url(array('controller' => 'Orders', 'action' => 'viewCart', 'plugin' => 'Shop')) ?>">مشاهده سبد خرید (<span id="cartCount"><?php echo count($this->Session->read('Cart.item')); ?></span>)</a>

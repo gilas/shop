@@ -375,10 +375,6 @@ border:solid 1px #BFBFBF;
 border:solid 1px #BFBFBF;
 }
 
-input[type="text"],input[type="password"],select {
-width:98%;
-}
-
 input.error[type="text"] {
 border:dashed 1px red;
 }
@@ -425,7 +421,7 @@ button::-moz-focus-inner,input::-moz-focus-inner{
 button:hover,button:active{
 	box-shadow:inset 0 0 1px 0 rgba(255,255,255,0.42)
 }
-button,input[type="submit"],input[type="reset"],a.btn{
+button,input[type="submit"],input[type="reset"]{
 	height:25px;
 	line-height:25px;
 	width:auto;
@@ -444,7 +440,7 @@ button,input[type="submit"],input[type="reset"],a.btn{
 	border-radius:5px;
 	overflow:hidden
 }
-button:hover,button:active,input[type="submit"]:hover,input[type="submit"]:active,input[type="reset"]:hover,input[type="reset"]:active,a.btn:hover,a.btn:active,.customfile-hover button{
+button:hover,button:active,input[type="submit"]:hover,input[type="submit"]:active,input[type="reset"]:hover,input[type="reset"]:active,.customfile-hover button{
 	border-color:#2462a0;
 	background:url(../img/theme/buttons/hover/bg.png) 0 0;
     
@@ -452,11 +448,8 @@ button:hover,button:active,input[type="submit"]:hover,input[type="submit"]:activ
 	-moz-box-shadow:0 1px 1px 0 rgba(18,16,11,0.1),inset 0 0 1px 0 rgba(255,255,255,0.42);
 	box-shadow:0 1px 1px 0 rgba(18,16,11,0.1),inset 0 0 1px 0 rgba(255,255,255,0.42)
 }
-button:active,input[type="submit"]:active,a.btn:active,.customfile-focus button{
+button:active,input[type="submit"]:active,.customfile-focus button{
 	background:url(../img/theme/buttons/active/bg.png)
-}
-a.btn:hover,a.btn:active{
-    color:#FFF;
 }
 a.btn{
 	height:23px;
@@ -466,11 +459,11 @@ a.btn{
 button.red,input[type="reset"],a.button.red,a.btn.red{
 	color:#952a2a
 }
-button:hover.red,button:active.red,input[type="reset"]:hover,input[type="reset"]:active,a.button.red:hover,a.button.red:active,a.btn.red:hover,a.btn.red:active{
+button:hover.red,button:active.red,input[type="reset"]:hover,input[type="reset"]:active{
 	border-color:#870d0d;
 	background-image:url(../img/theme/buttons/hover/bg-red.png)
 }
-button:active.red,input[type="reset"]:active,a.button.red:active,a.btn.red:active{
+button:active.red,input[type="reset"]:active{
 	background:url(../img/theme/buttons/active/bg-red.png)
 }
 
@@ -518,13 +511,17 @@ table-layout:fixed;
 display:table;
 width:1000px;
 }
-
+#right-content{
+    float:right;
+    width: 20%;
+    padding: 3px;
+}
 #content {
-float:none;
+float:left;
 line-height:1.8;
 padding:14px 7px;
 text-align:justify;
-width:985px;
+width:78%;
 }
 
 #footer {
@@ -651,6 +648,8 @@ legend{
     color:#FFF;
     font-weight: 700;
     text-shadow: 0 1px 0 #000;
+    width:auto;
+    font-size:12px;
 }
 fieldset{
     border:1px solid #d2d2d2;
@@ -2191,6 +2190,32 @@ input.price{
 .compToolbar li:hover{
     background-color: #F2E5E5;
 }
-.breadcrumb{
-    margin: 0;
+
+.module{
+    border: solid 1px #184C83;
+    padding: 2px;
+    margin-bottom:5px ;
+}
+.module-title{
+    background-color: #184C83;
+    padding: 0 4px;
+    color: #FFF;
+}
+#toolbar-menu{
+    background: none;
+    border: none;
+    border-bottom: 1px solid #EEEEEE;
+}
+#toolbar-menu .title {
+    font-size: 12px;
+}
+label, input, button, select, textarea{
+    font-size: 12px;
+}
+.form-horizontal label{
+    display: inline-block;
+    width: 120px;
+}
+.row-pad {
+    padding-bottom: 5px;
 }

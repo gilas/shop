@@ -72,6 +72,28 @@ class UsersController extends AppController {
             }
         }
     }
+    
+    public function _login($username, $password){
+        $user = $this->User->find('first', array(
+            'conditions' => array('username' => $username, 'password' => AuthComponent::password($password) , 'active' => true),
+            'contain' => 'Role',
+        ));
+        if(empty($user)){
+            return false;
+        }
+        // for artichecure in Auth
+        $user['User']['Role'] = $user['Role'];
+        $user = $user['User'];
+        if ($this->Auth->login($user)) {
+            //Update Fields
+            $this->User->id = $this->Auth->user('id');
+            $this->User->save(array(
+                'last_logged_in' => Jalali::dateTime(),
+              //  'last_ip_logged_in' => $this->request->clientIp(),
+            ));
+        }
+        return (bool)$user;
+    }
 
     public function admin_logout() {
         $this->Session->setFlash('شما با موفقیت از سیستم خارج شدید', 'message', array('type' => 'success'));

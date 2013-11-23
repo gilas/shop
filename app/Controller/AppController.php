@@ -367,7 +367,8 @@ class AppController extends Controller {
      */
     protected function _loadController($controller, $initialize = true){
         App::import('Controller',$controller);
-        $controller.='Controller';
+        $controller = pluginSplit($controller);
+        $controller = $controller[1] . 'Controller';
         $obj = new $controller;
         if($initialize){
             $obj->constructClasses();
