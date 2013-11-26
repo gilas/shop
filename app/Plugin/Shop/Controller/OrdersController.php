@@ -13,6 +13,13 @@ class OrdersController extends ShopAppController {
             'field' => 'FactorHead.type',
             'default' => 1,
         ),
+        'status' => array(
+            'field' => 'FactorHead.status',
+        ),
+        'number' => array(
+            'field' => 'FactorHead.number',
+            'type' => 'LIKE',
+        ),
     );
     
     public $publicActions = array(
@@ -47,6 +54,7 @@ class OrdersController extends ShopAppController {
         $this->set('title', $this->pageTitle);
         $this->set('type', $type);
         $this->set('namedType', $this->FactorHead->namedType);
+        $this->set('namedStatus', $this->FactorHead->namedStatus);
     }
 
 /**
@@ -513,5 +521,33 @@ class OrdersController extends ShopAppController {
             }
             $this->redirect(array('action' => 'submitCart'));
         }
-    }   
+    }
+    
+    public function admin_getSellOrders(){
+        $status = 0;
+        if(!empty($this->passedArgs['status'])){ $status = $this->passedArgs['status']; }
+        $type = 'all';
+        if(!empty($this->passedArgs['type'])){ $type = $this->passedArgs['type']; }
+        
+        return $this->FactorHead->find($type, array(
+            'conditions' => array(
+                'FactorHead.type' => 2, // sell order
+                'FactorHead.status' => $status,
+            ),
+        ));
+    }  
+    /**
+     * List Orders of current user
+     */
+    public function index(){
+        unset($this->paginateConditions['type']);
+        $this->paginate['conditions'] = array(
+            'ShopUser.id' => $this->Auth->user('ShopUser.id'),
+        );
+        $orders = $this->paginate();
+        $this->set(compact('orders'));
+        $this->set('title', $this->pageTitle);
+        $this->set('namedType', $this->FactorHead->namedType);
+        $this->set('namedStatus', $this->FactorHead->namedStatus);
+    } 
 }

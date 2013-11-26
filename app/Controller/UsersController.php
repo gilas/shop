@@ -74,6 +74,9 @@ class UsersController extends AppController {
     }
     
     public function _login($username, $password){
+        if ($this->Auth->loggedIn()) {
+            return true;;
+        }
         $user = $this->User->find('first', array(
             'conditions' => array('username' => $username, 'password' => AuthComponent::password($password) , 'active' => true),
             'contain' => 'Role',
@@ -84,6 +87,7 @@ class UsersController extends AppController {
         // for artichecure in Auth
         $user['User']['Role'] = $user['Role'];
         $user = $user['User'];
+        
         if ($this->Auth->login($user)) {
             //Update Fields
             $this->User->id = $this->Auth->user('id');

@@ -15,6 +15,7 @@ $this->AdminForm->showToolbar($title);
 echo $this->Filter->create('Order',array('action' => 'index'));
 echo $this->Filter->input('number',array('label' => 'شماره سفارش'));
 echo $this->Filter->input('type',array('label' => 'نوع سفارش', 'options' => $namedType, 'empty' => ''));
+echo $this->Filter->input('status',array('label' => 'وضعیت سفارش', 'options' => $namedStatus, 'empty' => ''));
 echo $this->Filter->end();
 
 if (!empty($orders)){
@@ -31,6 +32,7 @@ if (!empty($orders)){
             array('نام خریدار/فروشنده' => array('style' => 'width:160px')),
             array('مبلغ' => array('style' => 'width:160px')),
             array('تاریخ سفارش' => array('class' => 'width:160px')),
+            array('وضعیت' => array('class' => 'width:160px')),
             array('مشاهده فاکتور' => array('class' => 'width:160px')),
         )
     );
@@ -46,6 +48,7 @@ if (!empty($orders)){
             echo $this->Html->tag('td', $order['ShopUser']['User']['name']);
             echo $this->Html->tag('td', $this->Html->price($order['FactorHead']['final_price']));
             echo $this->Html->tag('td', $order['FactorHead']['date']);
+            echo $this->Html->tag('td', $order['FactorHead']['formattedStatus']);
             echo $this->Html->tag('td', $this->AdminForm->_createIframe($this->Html->tag('i','',array('class' => 'icon-file')), array('action' => 'detail', $order['FactorHead']['id'], 'layout' => 'iframe'), array('escape' => false, 'class' => 'btn btn-warning')), array('id' => 'grid-align'));
         echo $this->Html->useTag('tagend','tr');
         

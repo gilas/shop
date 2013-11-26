@@ -18,7 +18,7 @@ class UserController extends ShopAppController {
         ),
     );
     
-    public $publicActions = array('admin_detail');
+    public $publicActions = array('admin_detail','login');
     
     public function beforeFilter() {
         $this->baseUser = $this->_loadController('Users');
@@ -38,9 +38,16 @@ class UserController extends ShopAppController {
         $this->set('types', $this->ShopUser->namedType);
     }
     
-    //TODO: Complete it
     public function admin_detail($id = null){
-        echo 'fd';
+        //TODO: Complete it
+    }
+    
+    /**
+     * View information of current user to current user
+     */
+    public function view(){
+        $user = $this->ShopUser->read(null, $this->Auth->user('ShopUser.id'));
+        $this->set(compact('user'));
     }
     
     /**
@@ -78,5 +85,37 @@ class UserController extends ShopAppController {
         $shopUser = $shopUser['ShopUser'];
         $this->Session->write('Auth.User.ShopUser', $shopUser);
         return true;
+    }
+    
+    public function login(){
+        $this->pageTitle = 'ورود کاربران';
+        if ($this->Auth->loggedIn()) {
+            $this->redirect('/');
+        }
+        if ($this->request->is('post')) {
+            $this->baseUser = $this->_loadController('Users');
+            debug($this->request->data);
+            $success = $this->baseUser->_login($this->request->data('User.username'), $this->request->data('User.password'));
+            if ($success) {
+                
+                $shopUser = $this->ShopUser->find('first', array(
+                    'conditions' => array('user_id' => $this->Auth->user('id')),
+                    'contain' => 'Group',
+                ));
+                if(! $shopUser){ 
+                    $this->Auth->logout();
+                    return false;
+                }
+                $shopUser['ShopUser']['Group'] = $shopUser['Group'];
+                $shopUser = $shopUser['ShopUser'];
+                $this->Session->write('Auth.User.ShopUser', $shopUser);
+                
+                $this->Session->setFlash('شما با موفقیت وارد سیستم شدید', 'message', array('type' => 'success'));
+                $this->redirect($this->Auth->redirect());
+            } else {
+                $this->Session->setFlash(SettingsController::read('Error.Code-11'), 'message', array('type' => 'error'));
+            }
+        }
+        $this->render('/Users/login');
     }
 }

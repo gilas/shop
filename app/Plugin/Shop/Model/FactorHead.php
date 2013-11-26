@@ -71,6 +71,22 @@ class FactorHead extends ShopAppModel {
         2 => 'فروش',
     );
     
+    public $namedStatus = array(
+        -1 => 'لغو شده',
+         0 => 'پرداخت نشده',
+         1 => 'ارسال نشده',
+         2 => 'ارسال شده',
+         3 => 'خاتمه',
+    );
+    
+    public $formattedStatus = array(
+        -1 => '<label class="label label-danger">لغو شده</label>',
+         0 => '<label class="label label-info">پرداخت نشده</label>',
+         1 => '<label class="label label-warning">ارسال نشده</label>',
+         2 => '<label class="label label-success">ارسال شده</label>',
+         3 => '<label class="label">خاتمه</label>',
+    );
+    
     public function afterFind($results){
         if(empty($results)){
             return $results;
@@ -80,6 +96,8 @@ class FactorHead extends ShopAppModel {
                 //TODO: Unknown error , how to get type of find (all, first, count, ...) 
                 if(!empty($result['FactorHead']) and is_array($result['FactorHead'])){
                     $result['FactorHead']['namedType'] =  @$this->namedType[$result['FactorHead']['type']];
+                    $result['FactorHead']['namedStatus'] =  @$this->namedStatus[$result['FactorHead']['status']];
+                    $result['FactorHead']['formattedStatus'] =  @$this->formattedStatus[$result['FactorHead']['status']];
                 }
             }
         }

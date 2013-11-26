@@ -485,3 +485,7 @@ th a.desc:after{
 .published-column{
     width:60px !important;
 }
+.table-list th{
+    text-align: right;
+    width: 25%;
+}

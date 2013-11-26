@@ -1,4 +1,5 @@
 <?php
+$this->Html->addCrumb('لیست فاکتور ها', array('action' => 'index'));
 $this->Html->addCrumb('مشاهده فاکتور');
 ?>
 <table style="width: 100%;">

@@ -58,7 +58,6 @@
         </body>
     </html>
     <?php //echo $this->element('sql_dump'); ?>
-<?php //echo $this->element('sql_dump'); ?>
 <script>
     $(function(){
         $('.alert.success[static!=true]').animate({
