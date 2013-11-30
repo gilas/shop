@@ -1,0 +1,1 @@
+<?php echo $this->element('statistics', array(), array('plugin' => 'Shop')); ?>

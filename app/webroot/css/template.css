@@ -489,3 +489,42 @@ th a.desc:after{
     text-align: right;
     width: 25%;
 }
+.box{
+    border: solid 1px #B7B6B6;
+    border-radius: 5px;
+    margin-top: 20px;
+    height: 220px;
+}
+.box-header{
+    background-color: #0C475E;
+    color: #EEEEEE;
+    text-align: center;
+}
+.box-header h2{
+    margin: 0;
+    font-size: 22px;
+}
+.box-body{
+    margin: 5px;
+    height: 146px;
+}
+.box-body .box-item{
+    margin-bottom: 5px;
+}
+.box-body .box-item span{
+    display: inline-block;
+    width: 57%;
+}
+.box-body .box-item i{
+    font-style: normal;
+}
+.box-body .box-item.head{
+    border-bottom: 1px solid #000000;
+    font-weight: bold;
+}
+.box-footer{
+    background-color: #EFEFEF;
+    padding: 1px 8px 3px;
+    text-align: left;
+    height: 20px;
+}

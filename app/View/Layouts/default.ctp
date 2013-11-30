@@ -35,7 +35,7 @@
                         <?php echo $this->Html->link('نمایش سایت', '/',array('target' => '_blank')); ?>
                         <span>سلام</span>
                         <?php echo AuthComponent::user('name'); ?>
-                        <?php echo $this->Html->link('خروج', array('controller' => 'users', 'action' => 'logout', 'admin' => TRUE)); ?>
+                        <?php echo $this->Html->link('خروج', array('controller' => 'users', 'action' => 'logout', 'admin' => TRUE, 'plugin' => false)); ?>
                     </div>
                 </div>
             </div>

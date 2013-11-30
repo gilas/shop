@@ -6,5 +6,9 @@ class FactorItem extends ShopAppModel {
             'className' => 'Shop.Stuff',
             'foreignKey' => 'stuff_id',
         ),
+        'FactorHead' => array(
+            'className' => 'Shop.FactorHead',
+            'foreignKey' => 'head_id',
+        ),
     );
 }

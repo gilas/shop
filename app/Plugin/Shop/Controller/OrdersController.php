@@ -44,6 +44,9 @@ class OrdersController extends ShopAppController {
         if(!empty($this->passedArgs['type'])){
             $type = (int)$this->passedArgs['type'];
         }
+        if(!empty($this->passedArgs['date'])){
+            $this->paginate['conditions']['date'] = str_replace('-', '/', $this->passedArgs['date']);
+        }
         $this->pageTitle = $this->_getParentTitle($type);
         $this->paginate['contain'] = 'ShopUser.User';
         $orders = $this->paginate();
@@ -550,4 +553,68 @@ class OrdersController extends ShopAppController {
         $this->set('namedType', $this->FactorHead->namedType);
         $this->set('namedStatus', $this->FactorHead->namedStatus);
     } 
+    
+    public function admin_getStatistics(){
+        $stats = array();
+        $stats['newOrders'] = $this->FactorHead->find('count', array(
+            'conditions' => array(
+                'FactorHead.type' => 2,
+                'FactorHead.status' => 0,
+            ),
+        ));
+        $stats['todayOrders'] = $this->FactorHead->find('count', array(
+            'conditions' => array(
+                'FactorHead.type' => 2,
+                'FactorHead.status' => 0,
+                'FactorHead.date' => Jalali::date('Y/m/d'),
+            ),
+        ));
+        $favoriteStuff = $this->FactorItem->find('first', array(
+            'conditions' => array(
+                'FactorHead.type' => 2,
+                'FactorHead.status >' => 0,
+            ),
+            'fields' => array('Stuff.name', 'count(*) * FactorItem.count as c'),
+            'contain' => array('Stuff', 'FactorHead'),
+            'group' => 'FactorItem.stuff_id',
+            'order' => 'c DESC',
+        ));
+        $stats['favoriteStuff']['name'] = @$favoriteStuff['Stuff']['name'];
+        $stats['favoriteStuff']['count'] = @$favoriteStuff['0']['c'];
+        
+        $newestFactors = $this->FactorHead->find('all', array(
+            'conditions' => array(
+                'FactorHead.type' => 2,
+                'FactorHead.status' => 0,
+            ),
+            'order' => 'FactorHead.id DESC',
+            'contain' => 'ShopUser.User',
+            'limit' => 5,
+        ));
+        $stats['newestFactors'] = $newestFactors;
+        
+        $notSentFactors = $this->FactorHead->find('all', array(
+            'conditions' => array(
+                'FactorHead.type' => 2,
+                'FactorHead.status' => 1,
+            ),
+            'order' => 'FactorHead.id DESC',
+            'contain' => 'ShopUser.User',
+            'limit' => 5,
+        ));
+        $stats['notSentFactors'] = $notSentFactors;
+        return $stats;
+    }
+    public function admin_details($factorID = null){
+        if(empty($factorID)){
+            $this->Session->setFlash('سفارش یافت نشد.', 'message', array('type' => 'error'));
+            $this->redirect('/');
+        }
+        $this->FactorHead->recursive = 2;
+        $factor = $this->FactorHead->read(null, $factorID);
+        $this->set(compact('factor'));
+        $this->pageTitle = 'مشاهده سفارش';
+        $this->set('title', $this->pageTitle);
+        $this->set('parentTitle', $this->_getParentTitle($factor['FactorHead']['type']));
+    }
 }

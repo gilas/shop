@@ -38,7 +38,21 @@ class UserController extends ShopAppController {
         $this->set('types', $this->ShopUser->namedType);
     }
     
-    public function admin_detail($id = null){
+    public function admin_details($id = null){
+       $user = $this->ShopUser->read(null, $id);
+       $this->pageTitle = 'جزئیات کاربر';
+       $this->set('title', $this->pageTitle);
+       $this->set('parentTitle',$this->_getParentTitle());
+        $this->set(compact('user'));
+    }
+    
+    public function admin_add(){
+        //TODO: Complete it
+    }
+    public function admin_edit($id = null){
+        //TODO: Complete it
+    }
+    public function admin_delete(){
         //TODO: Complete it
     }
     
@@ -117,5 +131,15 @@ class UserController extends ShopAppController {
             }
         }
         $this->render('/Users/login');
+    }
+    
+    public function admin_getStatistics(){
+        $stats = array();
+        $stats['newUsers'] = $this->ShopUser->find('all', array(
+            'contain' => 'User',
+            'order' => 'ShopUser.id DESC',
+            'limit' => 5,
+        ));
+        return $stats;
     }
 }

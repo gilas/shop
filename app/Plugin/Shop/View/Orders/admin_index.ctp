@@ -1,6 +1,16 @@
 <?php
 $this->Html->addCrumb($title);
 
+$this->Html->script('jquery.datepicker', false);
+$this->Html->scriptBlock('
+    $(function(){
+        $("#date").datepicker({
+            "dateFormat" : "yy-mm-dd"
+        });
+    });
+',array('inline' => false));
+$this->Html->css('jquery.datepicker', null, array('inline' => false));
+
 // Add
 $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-plus icon-white')),array('action' => 'add', 'type' => $type, 'normalLink' => true ),array('class' => 'btn btn-success','escape' => false, 'rel' => 'tooltip','data-original-title' => 'افزودن','tooltip-place' => 'top'));
 // Delete
@@ -16,11 +26,12 @@ echo $this->Filter->create('Order',array('action' => 'index'));
 echo $this->Filter->input('number',array('label' => 'شماره سفارش'));
 echo $this->Filter->input('type',array('label' => 'نوع سفارش', 'options' => $namedType, 'empty' => ''));
 echo $this->Filter->input('status',array('label' => 'وضعیت سفارش', 'options' => $namedStatus, 'empty' => ''));
+echo $this->Filter->input('date',array('label' => 'تاریخ سفارش', 'id' => 'date'));
 echo $this->Filter->end();
 
 if (!empty($orders)){
     // start form tag
-    echo $this->AdminForm->startFormTag();
+    echo $this->AdminForm->startFormTag('Orders');
     //start table tag
     echo $this->Html->tag('table',null,array('class' => 'table table-bordered table-striped'));
     // th tag
@@ -49,7 +60,7 @@ if (!empty($orders)){
             echo $this->Html->tag('td', $this->Html->price($order['FactorHead']['final_price']));
             echo $this->Html->tag('td', $order['FactorHead']['date']);
             echo $this->Html->tag('td', $order['FactorHead']['formattedStatus']);
-            echo $this->Html->tag('td', $this->AdminForm->_createIframe($this->Html->tag('i','',array('class' => 'icon-file')), array('action' => 'detail', $order['FactorHead']['id'], 'layout' => 'iframe'), array('escape' => false, 'class' => 'btn btn-warning')), array('id' => 'grid-align'));
+            echo $this->Html->tag('td', $this->AdminForm->_createIframe($this->Html->tag('i','',array('class' => 'icon-file')), array('action' => 'details', $order['FactorHead']['id'], 'layout' => 'iframe'), array('escape' => false, 'class' => 'btn btn-warning')), array('id' => 'grid-align'));
         echo $this->Html->useTag('tagend','tr');
         
     }//end foreach Ln 82

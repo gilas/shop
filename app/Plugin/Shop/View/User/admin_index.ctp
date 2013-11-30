@@ -10,9 +10,9 @@ $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-
   
 $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-check icon-white')),'',array('class' => 'btn btn-info','escape' => false,'isParent' => 'publish', 'rel' => 'tooltip','data-original-title' => 'انتشار','tooltip-place' => 'top'));
     // Publish
-    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-ok')). ' انتشار',array('action' => 'publish'),array('escape' => false, 'parent' => 'publish'));
+    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-ok')). ' فعال',array('action' => 'publish'),array('escape' => false, 'parent' => 'publish'));
     // unPublish
-    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-remove')).' عدم انتشار',array('action' => 'unPublish'),array('escape' => false, 'parent' => 'publish'));
+    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-remove')).' غیرفعال',array('action' => 'unPublish'),array('escape' => false, 'parent' => 'publish'));
 //Show toolbar
 $this->AdminForm->showToolbar($title);
 
@@ -101,7 +101,7 @@ if (!empty($users)){
         
         echo $this->Html->tag('td', Jalali::niceShort($user['User']['last_logged_in']));
         
-        echo $this->Html->tag('td', $this->AdminForm->_createIframe($this->Html->tag('i','',array('class' => 'icon-file')), array('action' => 'detail', $user['ShopUser']['id'], 'layout' => 'iframe'), array('escape' => false, 'class' => 'btn btn-warning')), array('id' => 'grid-align'));    
+        echo $this->Html->tag('td', $this->AdminForm->_createIframe($this->Html->tag('i','',array('class' => 'icon-file')), array('action' => 'details', $user['ShopUser']['id'], 'layout' => 'iframe'), array('escape' => false, 'class' => 'btn btn-warning')), array('id' => 'grid-align'));    
                 
         // end TR tag
         echo $this->Html->useTag('tagend','tr');
