@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 25, 2013 at 05:14 AM
+-- Generation Time: Dec 01, 2013 at 05:06 PM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -38,14 +38,14 @@ CREATE TABLE IF NOT EXISTS `gl_acos` (
   `lft` int(11) DEFAULT NULL,
   `rght` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci AUTO_INCREMENT=662 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci AUTO_INCREMENT=669 ;
 
 --
 -- Dumping data for table `gl_acos`
 --
 
 INSERT INTO `gl_acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`, `rght`) VALUES
-(1, NULL, NULL, NULL, 'controllers', 1, 894),
+(1, NULL, NULL, NULL, 'controllers', 1, 908),
 (2, 1, NULL, NULL, 'Comments', 2, 33),
 (3, 2, NULL, NULL, 'admin_index', 3, 4),
 (5, 2, NULL, NULL, 'admin_view', 7, 8),
@@ -277,7 +277,7 @@ INSERT INTO `gl_acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`
 (578, 568, NULL, NULL, 'admin_unPublish', 730, 731),
 (574, 568, NULL, NULL, 'dispatch', 722, 723),
 (575, 568, NULL, NULL, 'admin_settings', 724, 725),
-(567, 1, NULL, NULL, 'Shop', 710, 893),
+(567, 1, NULL, NULL, 'Shop', 710, 907),
 (579, 567, NULL, NULL, 'Stuffs', 733, 752),
 (580, 579, NULL, NULL, 'admin_index', 734, 735),
 (581, 579, NULL, NULL, 'admin_add', 736, 737),
@@ -288,7 +288,7 @@ INSERT INTO `gl_acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`
 (586, 579, NULL, NULL, 'admin_dispatch', 746, 747),
 (587, 579, NULL, NULL, 'dispatch', 748, 749),
 (588, 579, NULL, NULL, 'admin_settings', 750, 751),
-(589, 567, NULL, NULL, 'Orders', 753, 778),
+(589, 567, NULL, NULL, 'Orders', 753, 782),
 (590, 589, NULL, NULL, 'admin_index', 754, 755),
 (591, 589, NULL, NULL, 'admin_add', 756, 757),
 (592, 589, NULL, NULL, 'admin_edit', 758, 759),
@@ -298,66 +298,73 @@ INSERT INTO `gl_acos` (`id`, `parent_id`, `model`, `foreign_key`, `alias`, `lft`
 (596, 589, NULL, NULL, 'admin_dispatch', 766, 767),
 (597, 589, NULL, NULL, 'dispatch', 768, 769),
 (598, 589, NULL, NULL, 'admin_settings', 770, 771),
-(599, 567, NULL, NULL, 'User', 779, 790),
-(600, 599, NULL, NULL, 'admin_index', 780, 781),
-(601, 599, NULL, NULL, 'admin_dispatch', 782, 783),
-(602, 599, NULL, NULL, 'dispatch', 784, 785),
-(603, 599, NULL, NULL, 'admin_settings', 786, 787),
+(599, 567, NULL, NULL, 'User', 783, 804),
+(600, 599, NULL, NULL, 'admin_index', 784, 785),
+(601, 599, NULL, NULL, 'admin_dispatch', 786, 787),
+(602, 599, NULL, NULL, 'dispatch', 788, 789),
+(603, 599, NULL, NULL, 'admin_settings', 790, 791),
 (604, 589, NULL, NULL, 'viewFactor', 772, 773),
-(605, 567, NULL, NULL, 'Comments', 791, 812),
-(606, 605, NULL, NULL, 'admin_index', 792, 793),
-(607, 605, NULL, NULL, 'admin_view', 794, 795),
-(608, 605, NULL, NULL, 'admin_publish_comment', 796, 797),
-(609, 605, NULL, NULL, 'admin_unpublish_comment', 798, 799),
-(610, 605, NULL, NULL, 'admin_delete', 800, 801),
-(611, 605, NULL, NULL, 'admin_replyComment', 802, 803),
-(612, 605, NULL, NULL, 'admin_editComment', 804, 805),
-(613, 605, NULL, NULL, 'admin_dispatch', 806, 807),
-(614, 605, NULL, NULL, 'dispatch', 808, 809),
-(615, 605, NULL, NULL, 'admin_settings', 810, 811),
-(616, 567, NULL, NULL, 'Coupons', 813, 828),
-(617, 616, NULL, NULL, 'admin_index', 814, 815),
-(618, 616, NULL, NULL, 'admin_add', 816, 817),
-(619, 616, NULL, NULL, 'admin_edit', 818, 819),
-(620, 616, NULL, NULL, 'admin_delete', 820, 821),
-(622, 616, NULL, NULL, 'admin_dispatch', 822, 823),
-(623, 616, NULL, NULL, 'dispatch', 824, 825),
-(624, 616, NULL, NULL, 'admin_settings', 826, 827),
-(625, 567, NULL, NULL, 'Deports', 829, 844),
-(626, 625, NULL, NULL, 'admin_index', 830, 831),
-(627, 625, NULL, NULL, 'admin_add', 832, 833),
-(628, 625, NULL, NULL, 'admin_edit', 834, 835),
-(629, 625, NULL, NULL, 'admin_delete', 836, 837),
+(605, 567, NULL, NULL, 'Comments', 805, 826),
+(606, 605, NULL, NULL, 'admin_index', 806, 807),
+(607, 605, NULL, NULL, 'admin_view', 808, 809),
+(608, 605, NULL, NULL, 'admin_publish_comment', 810, 811),
+(609, 605, NULL, NULL, 'admin_unpublish_comment', 812, 813),
+(610, 605, NULL, NULL, 'admin_delete', 814, 815),
+(611, 605, NULL, NULL, 'admin_replyComment', 816, 817),
+(612, 605, NULL, NULL, 'admin_editComment', 818, 819),
+(613, 605, NULL, NULL, 'admin_dispatch', 820, 821),
+(614, 605, NULL, NULL, 'dispatch', 822, 823),
+(615, 605, NULL, NULL, 'admin_settings', 824, 825),
+(616, 567, NULL, NULL, 'Coupons', 827, 842),
+(617, 616, NULL, NULL, 'admin_index', 828, 829),
+(618, 616, NULL, NULL, 'admin_add', 830, 831),
+(619, 616, NULL, NULL, 'admin_edit', 832, 833),
+(620, 616, NULL, NULL, 'admin_delete', 834, 835),
+(622, 616, NULL, NULL, 'admin_dispatch', 836, 837),
+(623, 616, NULL, NULL, 'dispatch', 838, 839),
+(624, 616, NULL, NULL, 'admin_settings', 840, 841),
+(625, 567, NULL, NULL, 'Deports', 843, 858),
+(626, 625, NULL, NULL, 'admin_index', 844, 845),
+(627, 625, NULL, NULL, 'admin_add', 846, 847),
+(628, 625, NULL, NULL, 'admin_edit', 848, 849),
+(629, 625, NULL, NULL, 'admin_delete', 850, 851),
 (659, 589, NULL, NULL, 'admin_getSellOrders', 774, 775),
-(631, 625, NULL, NULL, 'admin_dispatch', 838, 839),
-(632, 625, NULL, NULL, 'dispatch', 840, 841),
-(633, 625, NULL, NULL, 'admin_settings', 842, 843),
-(634, 567, NULL, NULL, 'Groups', 845, 862),
-(635, 634, NULL, NULL, 'admin_index', 846, 847),
-(636, 634, NULL, NULL, 'admin_add', 848, 849),
-(637, 634, NULL, NULL, 'admin_edit', 850, 851),
-(638, 634, NULL, NULL, 'admin_delete', 852, 853),
-(639, 634, NULL, NULL, 'admin_view', 854, 855),
-(640, 634, NULL, NULL, 'admin_dispatch', 856, 857),
-(641, 634, NULL, NULL, 'dispatch', 858, 859),
-(642, 634, NULL, NULL, 'admin_settings', 860, 861),
-(643, 567, NULL, NULL, 'Payments', 863, 876),
-(644, 643, NULL, NULL, 'admin_index', 864, 865),
-(645, 643, NULL, NULL, 'admin_changeStatus', 866, 867),
-(646, 643, NULL, NULL, 'admin_reverse', 868, 869),
-(647, 643, NULL, NULL, 'admin_dispatch', 870, 871),
-(648, 643, NULL, NULL, 'dispatch', 872, 873),
-(649, 643, NULL, NULL, 'admin_settings', 874, 875),
-(650, 567, NULL, NULL, 'Taxes', 877, 892),
-(651, 650, NULL, NULL, 'admin_index', 878, 879),
-(652, 650, NULL, NULL, 'admin_add', 880, 881),
-(653, 650, NULL, NULL, 'admin_edit', 882, 883),
-(654, 650, NULL, NULL, 'admin_delete', 884, 885),
+(631, 625, NULL, NULL, 'admin_dispatch', 852, 853),
+(632, 625, NULL, NULL, 'dispatch', 854, 855),
+(633, 625, NULL, NULL, 'admin_settings', 856, 857),
+(634, 567, NULL, NULL, 'Groups', 859, 876),
+(635, 634, NULL, NULL, 'admin_index', 860, 861),
+(636, 634, NULL, NULL, 'admin_add', 862, 863),
+(637, 634, NULL, NULL, 'admin_edit', 864, 865),
+(638, 634, NULL, NULL, 'admin_delete', 866, 867),
+(639, 634, NULL, NULL, 'admin_view', 868, 869),
+(640, 634, NULL, NULL, 'admin_dispatch', 870, 871),
+(641, 634, NULL, NULL, 'dispatch', 872, 873),
+(642, 634, NULL, NULL, 'admin_settings', 874, 875),
+(643, 567, NULL, NULL, 'Payments', 877, 890),
+(644, 643, NULL, NULL, 'admin_index', 878, 879),
+(645, 643, NULL, NULL, 'admin_changeStatus', 880, 881),
+(646, 643, NULL, NULL, 'admin_reverse', 882, 883),
+(647, 643, NULL, NULL, 'admin_dispatch', 884, 885),
+(648, 643, NULL, NULL, 'dispatch', 886, 887),
+(649, 643, NULL, NULL, 'admin_settings', 888, 889),
+(650, 567, NULL, NULL, 'Taxes', 891, 906),
+(651, 650, NULL, NULL, 'admin_index', 892, 893),
+(652, 650, NULL, NULL, 'admin_add', 894, 895),
+(653, 650, NULL, NULL, 'admin_edit', 896, 897),
+(654, 650, NULL, NULL, 'admin_delete', 898, 899),
 (660, 589, NULL, NULL, 'index', 776, 777),
-(656, 650, NULL, NULL, 'admin_dispatch', 886, 887),
-(657, 650, NULL, NULL, 'dispatch', 888, 889),
-(658, 650, NULL, NULL, 'admin_settings', 890, 891),
-(661, 599, NULL, NULL, 'view', 788, 789);
+(656, 650, NULL, NULL, 'admin_dispatch', 900, 901),
+(657, 650, NULL, NULL, 'dispatch', 902, 903),
+(658, 650, NULL, NULL, 'admin_settings', 904, 905),
+(661, 599, NULL, NULL, 'view', 792, 793),
+(662, 589, NULL, NULL, 'admin_getStatistics', 778, 779),
+(663, 599, NULL, NULL, 'admin_getStatistics', 794, 795),
+(664, 589, NULL, NULL, 'admin_details', 780, 781),
+(665, 599, NULL, NULL, 'admin_details', 796, 797),
+(666, 599, NULL, NULL, 'admin_add', 798, 799),
+(667, 599, NULL, NULL, 'admin_edit', 800, 801),
+(668, 599, NULL, NULL, 'admin_delete', 802, 803);
 
 -- --------------------------------------------------------
 
@@ -404,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `gl_aros_acos` (
   PRIMARY KEY (`id`),
   KEY `aco_id` (`aco_id`),
   KEY `aro_id` (`aro_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci AUTO_INCREMENT=573 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci AUTO_INCREMENT=587 ;
 
 --
 -- Dumping data for table `gl_aros_acos`
@@ -769,6 +776,7 @@ INSERT INTO `gl_aros_acos` (`id`, `aro_id`, `aco_id`, `_create`, `_read`, `_upda
 (484, 2, 618, '1', '1', '1', '1'),
 (485, 2, 619, '1', '1', '1', '1'),
 (486, 2, 620, '1', '1', '1', '1'),
+(574, 3, 662, '1', '1', '1', '1'),
 (488, 2, 622, '1', '1', '1', '1'),
 (489, 2, 623, '1', '1', '1', '1'),
 (490, 2, 624, '1', '1', '1', '1'),
@@ -816,6 +824,7 @@ INSERT INTO `gl_aros_acos` (`id`, `aro_id`, `aco_id`, `_create`, `_read`, `_upda
 (532, 3, 618, '1', '1', '1', '1'),
 (533, 3, 619, '1', '1', '1', '1'),
 (534, 3, 620, '1', '1', '1', '1'),
+(573, 2, 662, '1', '1', '1', '1'),
 (536, 3, 622, '1', '1', '1', '1'),
 (537, 3, 623, '1', '1', '1', '1'),
 (538, 3, 624, '1', '1', '1', '1'),
@@ -848,7 +857,19 @@ INSERT INTO `gl_aros_acos` (`id`, `aro_id`, `aco_id`, `_create`, `_read`, `_upda
 (569, 2, 659, '1', '1', '1', '1'),
 (566, 3, 656, '1', '1', '1', '1'),
 (567, 3, 657, '1', '1', '1', '1'),
-(568, 3, 658, '1', '1', '1', '1');
+(568, 3, 658, '1', '1', '1', '1'),
+(575, 2, 663, '1', '1', '1', '1'),
+(576, 3, 663, '1', '1', '1', '1'),
+(577, 2, 664, '1', '1', '1', '1'),
+(578, 3, 664, '1', '1', '1', '1'),
+(579, 2, 665, '1', '1', '1', '1'),
+(580, 3, 665, '1', '1', '1', '1'),
+(581, 2, 666, '1', '1', '1', '1'),
+(582, 3, 666, '1', '1', '1', '1'),
+(583, 2, 667, '1', '1', '1', '1'),
+(584, 3, 667, '1', '1', '1', '1'),
+(585, 2, 668, '1', '1', '1', '1'),
+(586, 3, 668, '1', '1', '1', '1');
 
 -- --------------------------------------------------------
 
@@ -1737,11 +1758,11 @@ CREATE TABLE IF NOT EXISTS `gl_users` (
 INSERT INTO `gl_users` (`id`, `username`, `password`, `name`, `email`, `active`, `role_id`, `registered_date`, `last_logged_in`, `last_ip_logged_in`) VALUES
 (1, 'admin', '9ee2c9367485427679bd7a0ec1c7f3263869b387', 'جمال طوسی', 'jamal4533@yahoo.com', 1, 3, '0000-00-00 00:00:00', '1392-03-20 13:17:07', '127.0.0.1'),
 (2, 'hamid', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'حمید ممدوحی', 'hamid.mamdoohi@gmail.com', 1, 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '127.0.0.1'),
-(3, 'razzaghi', '6017b1c16ab39a4f14f2a579fa9aa629936c78b6', 'محمد رزاقی', '1razzaghi@gmail.com', 1, 2, '0000-00-00 00:00:00', '1392-09-04 06:11:52', '127.0.0.1'),
+(3, 'razzaghi', '6017b1c16ab39a4f14f2a579fa9aa629936c78b6', 'محمد رزاقی', '1razzaghi@gmail.com', 1, 2, '0000-00-00 00:00:00', '1392-09-09 09:57:17', '127.0.0.1'),
 (15, '0945981961', 'daf0b857884e8f26b40e14ced40ebd29039503ed', 'مصطفی مهتر', 'mostafa.mehtar@gmail.com', 1, 3, '1391-11-15 16:39:02', '1391-11-30 10:20:12', '127.0.0.1'),
 (16, 'hamid1', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'hamid', NULL, 0, 2, '1392-07-25 12:12:08', '0000-00-00 00:00:00', ''),
 (17, 'hamid2', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'hamid', NULL, 1, 2, '1392-07-25 12:13:12', '0000-00-00 00:00:00', ''),
-(18, 'hamid12', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'حمید ممدوحی', NULL, 1, 18, '1392-08-16 08:43:45', '1392-09-04 06:36:41', '127.0.0.1');
+(18, 'hamid12', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'حمید ممدوحی', NULL, 1, 18, '1392-08-16 08:43:45', '1392-09-06 23:48:00', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -1856,7 +1877,7 @@ CREATE TABLE IF NOT EXISTS `shop_coupons` (
   `factor_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `serial` (`serial`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `shop_coupons`
@@ -1873,7 +1894,8 @@ INSERT INTO `shop_coupons` (`id`, `type`, `serial`, `discount_type`, `discount_v
 (8, 1, 'EID8819153', 1, 30, NULL, '1392-08-30 00:54:18', NULL, NULL),
 (9, 1, 'EID2766271', 1, 30, NULL, '1392-08-30 00:54:18', NULL, NULL),
 (10, 1, 'EID2555376', 1, 30, NULL, '1392-08-30 00:54:18', NULL, NULL),
-(11, 1, 'EID5465198', 1, 30, NULL, '1392-08-30 00:54:18', NULL, NULL);
+(11, 1, 'EID5465198', 1, 30, NULL, '1392-08-30 00:54:18', NULL, NULL),
+(12, 1, NULL, 1, NULL, 1, '1392-09-06 23:50:10', '1392-09-06 23:50:10', 26);
 
 -- --------------------------------------------------------
 
@@ -1920,38 +1942,36 @@ CREATE TABLE IF NOT EXISTS `shop_factor_heads` (
   KEY `frn_deport_factor` (`deport_id`),
   KEY `frn_user_factor` (`user_id`),
   KEY `frn_coupon_factor` (`coupon_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27 ;
 
 --
 -- Dumping data for table `shop_factor_heads`
 --
 
 INSERT INTO `shop_factor_heads` (`id`, `user_id`, `type`, `date`, `number`, `coupon_id`, `total_price`, `tax_id`, `deport_id`, `final_price`, `created`, `status`, `status_dates`) VALUES
-(1, 1, 1, '1392/07/15', '', NULL, NULL, NULL, NULL, NULL, '1392-07-23 12:13:41', 0, NULL),
-(2, 1, 1, '1392/07/25', '985421', NULL, 6036000, NULL, NULL, 6036000, '1392-07-25 14:22:01', 0, NULL),
 (3, 1, 1, '1392/07/27', '98554', NULL, 36000, NULL, NULL, 6036000, '1392-07-25 14:28:58', 0, NULL),
 (4, 1, 1, '1392/07/27', '98554', NULL, 6036000, NULL, NULL, 6036000, '1392-07-25 14:29:20', 0, NULL),
-(5, 1, 1, '', '', NULL, 6036000, NULL, NULL, 6036000, '1392-07-25 16:00:20', 0, NULL),
 (6, 1, 1, '1392/07/23', '789', NULL, 100000000, NULL, NULL, 100000000, '1392-07-25 17:45:34', 0, NULL),
 (7, 1, 1, '1392/07/23', '789', NULL, 100000000, NULL, NULL, 100000000, '1392-07-25 17:46:30', 0, NULL),
 (8, 1, 1, '1392/07/08', '456', NULL, 6816000, NULL, NULL, 6816000, '1392-07-25 17:49:10', 0, NULL),
 (9, 1, 1, '1392/07/16', '789', NULL, 36000, NULL, NULL, 36000, '1392-07-25 17:50:04', 0, NULL),
 (10, 1, 1, '1392/07/22', '789', NULL, 200000, NULL, NULL, 200000, '1392-07-26 19:42:43', 0, NULL),
-(11, 2, 2, '1392/08/16', '920816', 1, 828000, NULL, 1, 703000, '1392-08-16 09:48:33', 0, NULL),
-(12, 2, 2, '1392/08/16', '92081612', NULL, 780000, NULL, NULL, 780000, '1392-08-16 09:50:39', 0, NULL),
-(13, 2, 2, '1392/08/16', '92081613', NULL, 780000, NULL, NULL, 780000, '1392-08-16 09:59:09', 0, NULL),
-(14, 2, 2, '1392/08/16', '92081614', NULL, 780000, NULL, NULL, 780000, '1392-08-16 10:35:54', 0, NULL),
-(15, 2, 2, '1392/08/16', '92081615', 1, 216000, NULL, 1, 91000, '1392-08-16 10:38:52', 0, NULL),
-(16, 2, 2, '1392/08/16', '92081616', 1, 216000, NULL, 1, 91000, '1392-08-16 10:46:57', 0, NULL),
-(17, 2, 2, '1392/08/16', '92081617', NULL, 36000, NULL, NULL, 36000, '1392-08-16 10:55:15', 0, NULL),
-(18, 2, 2, '1392/08/23', '92082318', 1, 2000000, 1, 1, 1875000, '1392-08-23 13:27:49', 0, NULL),
+(11, 2, 2, '1392/08/16', '920816', 1, 828000, NULL, 1, 703000, '1392-08-16 09:48:33', 1, NULL),
+(12, 2, 2, '1392/08/16', '92081612', NULL, 780000, NULL, NULL, 780000, '1392-08-16 09:50:39', 1, NULL),
+(13, 2, 2, '1392/08/16', '92081613', NULL, 780000, NULL, NULL, 780000, '1392-08-16 09:59:09', 1, NULL),
+(14, 2, 2, '1392/08/16', '92081614', NULL, 780000, NULL, NULL, 780000, '1392-08-16 10:35:54', 1, NULL),
+(15, 2, 2, '1392/08/16', '92081615', 1, 216000, NULL, 1, 91000, '1392-08-16 10:38:52', 2, NULL),
+(16, 2, 2, '1392/08/16', '92081616', 1, 216000, NULL, 1, 91000, '1392-08-16 10:46:57', 2, NULL),
+(17, 2, 2, '1392/08/16', '92081617', NULL, 36000, NULL, NULL, 36000, '1392-08-16 10:55:15', 2, NULL),
+(18, 2, 2, '1392/08/23', '92082318', 1, 2000000, 1, 1, 1875000, '1392-08-23 13:27:49', 2, NULL),
 (19, 2, 2, '1392/08/30', '92083019', 1, 600000, NULL, 1, 610000, '1392-08-30 00:32:45', 0, NULL),
-(20, 2, 2, '1392/09/01', '92090120', 2, 748500, NULL, 1, 898470, '1392-09-01 13:23:39', 0, NULL),
+(20, 2, 2, '1392/09/01', '92090120', 2, 748500, NULL, 1, 898470, '1392-09-01 13:23:39', 2, NULL),
 (21, 1, 1, '1392/09/11', '789', NULL, 10000000, NULL, NULL, 10000000, '1392-09-01 15:52:35', 0, NULL),
 (22, 1, 1, '1392/09/18', '89789', NULL, 9500000, NULL, NULL, 9500000, '1392-09-01 15:55:51', 0, NULL),
-(23, 2, 2, '1392/09/10', '89789', NULL, 6000000, NULL, NULL, 6000000, '1392-09-01 16:09:16', 0, NULL),
+(23, 2, 2, '1392/09/08', '89789', NULL, 6000000, NULL, NULL, 6000000, '1392-09-01 16:09:16', 0, NULL),
 (24, 2, 2, '1392/09/01', '92090124', 3, 427500, NULL, 1, 449250, '1392-09-01 16:56:32', 0, NULL),
-(25, 2, 2, '1392/09/01', '92090125', 4, 712500, NULL, 1, 648750, '1392-09-01 17:37:39', 0, NULL);
+(25, 2, 2, '1392/09/01', '92090125', 4, 712500, NULL, 1, 648750, '1392-09-01 17:37:39', 0, NULL),
+(26, 2, 2, '1392/09/06', '92090626', NULL, 427500, NULL, 1, 577500, '1392-09-06 23:50:10', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1966,8 +1986,10 @@ CREATE TABLE IF NOT EXISTS `shop_factor_items` (
   `count` int(11) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   `total_price` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+  PRIMARY KEY (`id`),
+  KEY `fk_item_head` (`head_id`),
+  KEY `fk_item_stuff` (`stuff_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
 
 --
 -- Dumping data for table `shop_factor_items`
@@ -1976,10 +1998,8 @@ CREATE TABLE IF NOT EXISTS `shop_factor_items` (
 INSERT INTO `shop_factor_items` (`id`, `head_id`, `stuff_id`, `count`, `price`, `total_price`) VALUES
 (1, 4, 2, 30, 200000, 6000000),
 (2, 4, 3, 3, 12000, 36000),
-(3, 5, 2, 30, 200000, 6000000),
-(4, 5, 3, 3, 12000, 36000),
 (5, 6, 2, 500, 200000, 100000000),
-(6, 6, NULL, 1, NULL, 0),
+(6, 6, 2, 1, NULL, 0),
 (7, 7, 2, 500, 200000, 100000000),
 (8, 7, 4, 1, 0, 0),
 (9, 8, 3, 568, 12000, 6816000),
@@ -2000,7 +2020,8 @@ INSERT INTO `shop_factor_items` (`id`, `head_id`, `stuff_id`, `count`, `price`, 
 (24, 22, 4, 50, 190000, 9500000),
 (25, 23, 4, 40, 150000, 6000000),
 (26, 24, 4, 3, 142500, 427500),
-(27, 25, 4, 5, 142500, 712500);
+(27, 25, 4, 5, 142500, 712500),
+(28, 26, 4, 3, 142500, 427500);
 
 -- --------------------------------------------------------
 
@@ -2105,7 +2126,7 @@ CREATE TABLE IF NOT EXISTS `shop_stuffs` (
 INSERT INTO `shop_stuffs` (`id`, `code`, `name`, `category_id`, `thumbnail_file_name`, `count`, `price`, `discount`, `type`, `weight`, `dimension`, `download_file_file_name`, `deport_id`, `tax_id`, `attachments_file_name`, `published`, `order`, `desc`, `created`, `modified`) VALUES
 (2, 'C12354', 'sd', 3, '32_copy.jpg', 988, 200000, NULL, 1, NULL, '', NULL, 0, 0, NULL, 1, 1, '<p>jhjhjhds</p>', '1392-07-20 06:19:54', '1392-07-27 03:59:06'),
 (3, '1247', 'ماکارونی', 2, NULL, 855, 12000, NULL, 1, NULL, '', NULL, 0, 0, NULL, 1, 1, '', '1392-07-21 11:49:15', '1392-07-26 22:20:42'),
-(4, '10056', 'برلیان', 6, 'Hamid_Picture.jpg', 17, 150000, 5, 1, 500, '10×20×30', NULL, 1, 1, 'DSC00062.JPG', 1, 1, '', '1392-09-01 12:02:02', '1392-09-01 16:09:16');
+(4, '10056', 'برلیان', 6, 'Hamid_Picture.jpg', 14, 150000, 5, 1, 500, '10×20×30', NULL, 1, 1, 'DSC00062.JPG', 1, 1, '', '1392-09-01 12:02:02', '1392-09-01 16:09:16');
 
 -- --------------------------------------------------------
 
@@ -2140,6 +2161,13 @@ ALTER TABLE `shop_factor_heads`
   ADD CONSTRAINT `frn_deport_factor` FOREIGN KEY (`deport_id`) REFERENCES `shop_deports` (`id`),
   ADD CONSTRAINT `frn_tax_factor` FOREIGN KEY (`tax_id`) REFERENCES `shop_taxes` (`id`),
   ADD CONSTRAINT `frn_user_factor` FOREIGN KEY (`user_id`) REFERENCES `shop_shop_users` (`id`);
+
+--
+-- Constraints for table `shop_factor_items`
+--
+ALTER TABLE `shop_factor_items`
+  ADD CONSTRAINT `fk_item_stuff` FOREIGN KEY (`stuff_id`) REFERENCES `shop_stuffs` (`id`),
+  ADD CONSTRAINT `fk_item_head` FOREIGN KEY (`head_id`) REFERENCES `shop_factor_heads` (`id`);
 
 --
 -- Constraints for table `shop_shop_users`
