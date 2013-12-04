@@ -1,4 +1,4 @@
-<h3>لطفا صبر نمائید تا سامانه به بانک متصل شود</h3>
+<h4>لطفا صبر نمائید تا سامانه به بانک متصل شود</h4>
 <form id="form"  action="<?php echo $url ?>" method="post">
     <input type="hidden" id="amount" name="amount" value="<?php echo $price ?>"/>
     <input type="hidden" id="merchantId" name="merchantId" value="<?php echo $mid ?>"/>

@@ -146,6 +146,9 @@ class CouponsController extends ShopAppController {
     }
     
     public function _useCoupon($coupon_id, $factor_id){
+        if(empty($coupon_id)){
+            return false;
+        }
         $this->Coupon->id = $coupon_id;
         $coupon = $this->Coupon->read();
         if($coupon['Coupon']['is_used']){

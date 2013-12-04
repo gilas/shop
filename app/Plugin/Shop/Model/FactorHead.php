@@ -74,7 +74,7 @@ class FactorHead extends ShopAppModel {
     public $namedStatus = array(
         -1 => 'لغو شده',
          0 => 'پرداخت نشده',
-         1 => 'ارسال نشده',
+         1 => 'پرداخت شده ولی ارسال نشده',
          2 => 'ارسال شده',
          3 => 'خاتمه',
     );
@@ -82,7 +82,7 @@ class FactorHead extends ShopAppModel {
     public $formattedStatus = array(
         -1 => '<label class="label label-danger">لغو شده</label>',
          0 => '<label class="label label-info">پرداخت نشده</label>',
-         1 => '<label class="label label-warning">ارسال نشده</label>',
+         1 => '<label class="label label-inverse">پرداخت شده ولی ارسال نشده</label>',
          2 => '<label class="label label-success">ارسال شده</label>',
          3 => '<label class="label">خاتمه</label>',
     );

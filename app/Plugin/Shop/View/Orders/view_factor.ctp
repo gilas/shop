@@ -2,6 +2,24 @@
 $this->Html->addCrumb('لیست فاکتور ها', array('action' => 'index'));
 $this->Html->addCrumb('مشاهده فاکتور');
 ?>
+<div class="row" id="toolbar-menu">
+    <div class="title">فاکتور فروش</div>
+    <ul id="toolbar">
+        <?php if($factor['FactorHead']['status'] == 0): ?>
+        <li>
+            <?php 
+            echo $this->Form->postLink('<i class="icon-shopping-cart icon-white"></i> پرداخت', array('controller' => 'Orders', 'action' => 'sendPayment', $factor['FactorHead']['id']), array('class' => 'btn btn-success', 'escape' => false));
+            ?>
+        </li>
+        <?php endif; ?>
+        <li>
+            <?php 
+            echo $this->Form->postLink('<i class="icon-print icon-white"></i> پرینت فاکتور', array('controller' => 'Orders', 'action' => 'emptyCart'), array('class' => 'btn btn-info', 'escape' => false));
+            ?>
+        </li>
+    </ul>
+</div>
+
 <table style="width: 100%;">
     <tr>
         <td>
@@ -68,6 +86,19 @@ $this->Html->addCrumb('مشاهده فاکتور');
         </td>
     </tr>
 </table>
-<?php
-//debug($factor);
-?>
+<?php if($factor['FactorHead']['status'] > 0):?>
+<table class="users">
+    <tr>
+        <th>نحوه پرداخت</th>
+        <th>مبلغ پرداختی</th>
+        <th>تاریخ پرداخت</th>
+        <th>وضعیت</th>
+    </tr>
+    <tr>
+        <td><?php echo $payInfo['type'] ?></td>
+        <td><?php echo $this->Html->price($payInfo['price']); ?></td>
+        <td><?php echo Jalali::niceShort($payInfo['pay_date']); ?></td>
+        <td><?php echo $payInfo['formattedStatus'] ?></td>
+    </tr>
+</table>
+<?php endif; ?>

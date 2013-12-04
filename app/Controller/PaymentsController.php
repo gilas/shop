@@ -7,7 +7,6 @@ class PaymentsController extends AppController{
     
     public $publicActions = array('onlineSend','onlineReceive','send');
     public $uses = array('Payment');
-    protected $_nusoap = null;
     
     
 /**
@@ -75,7 +74,7 @@ class PaymentsController extends AppController{
         $params = $this->_getParam();
         
         if(is_null($params)){
-            $this->Session->setFlash('اشکال در دریافت اطلاعات','alert',array('type' => 'error'));
+            $this->Session->setFlash('اشکال در دریافت اطلاعات','message',array('type' => 'error'));
             $this->redirect($this->referer());
         }
         //TODO: comment this, because if we click twice, session is removed and we won't it
@@ -89,7 +88,7 @@ class PaymentsController extends AppController{
         if($payInfo){
             // if payed , user cann't pay again
             if($payInfo['Payment']['status']){
-                $this->Session->setFlash('این درخواست قبلا پرداخت شده است','alert',array('type' => 'error'));
+                $this->Session->setFlash('این درخواست قبلا پرداخت شده است','message',array('type' => 'error'));
                 $this->redirect($params['ref_url']);
             }
             $this->Payment->id = $payInfo['Payment']['id'];
@@ -101,21 +100,22 @@ class PaymentsController extends AppController{
             'ref_id'  => $params['ref_id'],
             )
         );
-        
         $this->set('price',$params['priceWithTax']);
         $this->set('res_num',$this->Payment->id);
         
+        $this->getGateway($gate)->send();
+    }
+    
+    protected function getGateway($gate){
         switch($gate){
-            case 'postbank':
-                $this->_pbSend();
-                break;
-            case 'tejaratbank':
-                $this->_tbSend();
-                break;
-            default:
-                $this->_enSend();
-                break;
+            case 'test': 
+                if(SettingsController::read('Payment.showTest')){
+                    return new testPayment($this);
+                }
+            case 'tejaratbank': return new tbPayment($this);
+            default: return new enPayment($this);
         }
+        return null;
     }
 
 /**
@@ -125,16 +125,7 @@ class PaymentsController extends AppController{
  */
     public function onlineReceive($gateway = null){
         $params = array();
-        switch($gateway){
-            case 'postbank':
-                $params = $this->_pbReceive();
-                break;
-            case 'tejaratbank':
-                $params = $this->_tbReceive();
-                break;
-            default:
-                $params = $this->_enReceive();
-        }
+        $params = $this->getGateway($gateway)->receive();
         $params['ref_url'] = $this->_getParam('ref_url');
         $this->set($params);
     }
@@ -162,7 +153,7 @@ class PaymentsController extends AppController{
         $this->set('tax', $tax);
         $this->set('priceWithTax', $this->Session->read('Payment-Params.priceWithTax'));
         if(! $this->_getParam()){
-            $this->Session->setFlash('اشکال در دریافت اطلاعات پرداخت','alert',array('type' => 'error'));
+            $this->Session->setFlash('اشکال در دریافت اطلاعات پرداخت','message',array('type' => 'error'));
             $this->redirect($this->homepages[$this->Auth->user('Role.name')]);
         }
         
@@ -171,7 +162,7 @@ class PaymentsController extends AppController{
 
         // if this request is saved in table
         if($payInfo and $payInfo['Payment']['ref_num'] !== null){
-            $this->Session->setFlash('این درخواست قبلا پرداخت شده است','alert',array('type' => 'error'));
+            $this->Session->setFlash('این درخواست قبلا پرداخت شده است','message',array('type' => 'error'));
             $this->redirect($this->_getParam('ref_id'));
         }
         // if has row without ref_num , update it
@@ -182,7 +173,7 @@ class PaymentsController extends AppController{
             // i don't check it in model validation because i want ref_num can be null for online payment
             // but i don't empty it in offline payment
             if(empty($this->request->data['ref_num']) or empty($this->request->data['pay_date'])){
-                return $this->Session->setFlash('تمامی فیلدها تکمیل گردد','alert',array('type' => 'error'));
+                return $this->Session->setFlash('تمامی فیلدها تکمیل گردد','message',array('type' => 'error'));
             }
             
             $this->request->data['price'] = $this->_getParam('price');
@@ -190,12 +181,12 @@ class PaymentsController extends AppController{
             $this->request->data['status'] = 0;
             $this->request->data['person_id'] = $this->_givePersonInfo('Person.id');
             if($this->Payment->save($this->request->data)){
-                $this->Session->setFlash('اطلاعات پرداخت ثبت گردید','alert',array('type' => 'success'));
+                $this->Session->setFlash('اطلاعات پرداخت ثبت گردید','message',array('type' => 'success'));
                 $refUrl = $this->_getParam('ref_url');
                 $this->_removeParam();
                 $this->redirect($refUrl);
             }else{
-                $this->Session->setFlash('اشکال در ثبت اطلاعات پرداخت','alert',array('type' => 'error'));
+                $this->Session->setFlash('اشکال در ثبت اطلاعات پرداخت','message',array('type' => 'error'));
             }
         }
     }
@@ -294,6 +285,7 @@ class PaymentsController extends AppController{
         $this->paginate['conditions'][] = 'Payment.ref_num IS NOT NULL' ;
         $this->paginate['order'] = 'Payment.id DESC';
         $this->set('payments',$this->paginate());
+        $this->helpers[] = 'AdminForm';
     }
     
     /**
@@ -302,27 +294,24 @@ class PaymentsController extends AppController{
      * @return void
      */
     public function admin_changeStatus(){
-        
-        // extract given params
-        extract($this->request->named);
-        
-        // only can have two status
-        $status = ($status == 1)?1:-1;
-        
-        $this->Payment->id = $pay_id;
-        
-        if(! $this->Payment->exists()){
-            $this->Session->setFlash('چنین پرداختی وجود ندارد','alert',array('type' => 'error'));
-            $this->redirect($this->referer());
+        $status = null;
+        if(isset($this->request->data['status'])){
+            $status = $this->request->data['status'];
+        }
+        switch($status){
+            case '-1':
+                $this->_changeStatus('Payment', 'status', -1, 'پرداخت مورد عدم تایید قرار گرفت');
+                break;
+            case '0':
+                $this->_changeStatus('Payment', 'status', 0, 'پرداخت به حالت بررسی نشده تغییر وضعیت داده شد');
+                break;
+            case '1':
+                $this->_changeStatus('Payment', 'status', 1, 'پرداخت مورد تایید قرار گرفت');
+                break;
+            default:
+                $this->Session->setFlash('پارامتر دریافتی اشتباه می باشد', 'message', array('type' => 'error'));
         }
         
-        if($this->request->is('post')){
-            if($this->Payment->saveField('status',$status)){
-                $this->Session->setFlash('پرداخت ویرایش گردید','alert',array('type' => 'success'));
-            }else{
-                $this->Session->setFlash('اشکال در ویرایش پرداخت','alert',array('type' => 'error'));
-            }
-        }
         $this->redirect($this->referer());
     }
     
@@ -336,14 +325,21 @@ class PaymentsController extends AppController{
     }
     
     
-/** 
- * Eghtesad novin
- */
-    private $__enMerchantID = '00109145-114669';
-    private $__enPassword = '456979';
-    private $__enWSDL = 'https://modern.enbank.net/ref-payment/ws/ReferencePayment?WSDL' ;
-    private $__enURL = 'https://modern.enbank.net/CardServices/controller';
-    private $__enErrorResponse = array(
+    protected function _addTax($price, $priceWithTax = true){
+        if($priceWithTax)
+            return intval($price + (5 * $price / 100));
+        return intval(5 * $price / 100);
+    }
+}
+
+class enPayment {
+    private $_nusoap = null;
+    private $merchantID = 'FALSE';
+    private $password = 'FALSE';
+    
+    private $WSDL = 'https://modern.enbank.net/ref-payment/ws/ReferencePayment?WSDL' ;
+    private $URL = 'https://modern.enbank.net/CardServices/controller';
+    private $errorResponse = array(
         'Canceled By User'     => 'تراکنش بوسيله خريدار کنسل شده',
         'Invalid Amount'       => 'مبلغ سند برگشتي  از مبلغ تراکنش اصلي بيشتر است',
         'Invalid Transaction'  => 'درخواست برگشت تراکنش رسيده است در حالي که تراکنش اصلي پيدا نمي شود',
@@ -361,7 +357,7 @@ class PaymentsController extends AppController{
         'Response Received Too Late'           => 'تراکنش در شبکه بانکي تايم اوت خورده',
         'Suspected Fraud Pick Up'              => 'اشتباه وارد شده cvv2 ويا ExpDate فيلدهاي'
      );
-    private $__enErrorVerify = array(
+    private $errorVerify = array(
         '-1' => 'خطای داخلی شبکه',
         '-2' => 'سپرده ها برابر نیستند',
         '-3' => 'ورودی ها حاوی کاراکترهای غیر مجاز میباشد',
@@ -381,49 +377,56 @@ class PaymentsController extends AppController{
         '-17' => 'برگشت زدن تراکنشی که با کارت بانکی غیر از بانک اقتصاد نوین انجام شده',
         '-18' => 'فروشنده نامعتبر است ip address'
     );
-    protected function _enSend(){
-        $this->set('mid',$this->__enMerchantID);
-        $this->set('url',$this->__enURL);
-        $this->render('send_en');
+    
+    private $Controller = null;
+    
+    public function __construct(&$Controller){
+        $this->Controller = $Controller;
     }
-    protected function _enReceive(){
+    public function send(){
+        $this->Controller->set('mid',$this->merchantID);
+        $this->Controller->set('url',$this->URL);
+        $this->Controller->render('send_en');
+    }
+    public function receive(){
         // Get Info from bank
-        $form = $_POST;
+        $form = $this->Controller->request->data;
         // have no info
         if(empty($form)){
-            $this->set('ref_url',$this->_getParam('ref_url'));
-            return array('ref_url' => $this->_getParam('ref_url'));
+            $this->Controller->set('ref_url',$this->Controller->_getParam('ref_url'));
+            return array('ref_url' => $this->Controller->_getParam('ref_url'));
         }
         $pay = array();
         $pay['ref_num'] = @$form['RefNum'];
         $pay['cus_ref_num'] = @$form['CustomerRefNum'];
         $pay['online_state'] = $form['State'];
-        $pay['type'] = 'آنلاین - بانک اقتصاد نوین';
-        $pay['person_id'] = $this->_givePersonInfo('Person.id');
+        $pay['user_id'] = $this->Controller->Auth->user('id');
         $pay['pay_date'] = Jalali::dateTime();
+        $pay['type'] = 'آنلاین - بانک اقتصاد نوین';
+        
         
         //Save info into table
-        $this->Payment->id = $form['ResNum'];
+        $this->Controller->Payment->id = $form['ResNum'];
         
-        if(! $this->Payment->exists()){
-            $this->Session->setFlash('اطلاعات پرداختی یافت نشد');
+        if(! $this->Controller->Payment->exists()){
+            $this->Controller->Session->setFlash('اطلاعات پرداختی یافت نشد');
             return false;
         }
         //Read info from table
-        $payInfo = $this->Payment->read();
+        $payInfo = $this->Controller->Payment->read();
         
         // This request is payed before
         if($payInfo['Payment']['status']){
-            $this->Session->setFlash('تراکنش قبلا تائید شده است');
+            $this->Controller->Session->setFlash('تراکنش قبلا تائید شده است');
             return false;
         }
-        if(! $this->Payment->save($pay)){
-            $this->Session->setFlash('اشکال در ذخیره اطلاعات');
+        if(! $this->Controller->Payment->save($pay)){
+            $this->Controller->Session->setFlash('اشکال در ذخیره اطلاعات');
             return false;
         }
         
         //Read info from table
-        $payInfo = $this->Payment->read();
+        $payInfo = $this->Controller->Payment->read();
         
         // Construct this variables  
         $verify = false; // if true means transaction is verified or not it is false
@@ -437,7 +440,7 @@ class PaymentsController extends AppController{
         if($form['State'] == 'OK' && !empty($form['RefNum'])){
             
             // verify
-            $res = $this->_enVerify($form['RefNum']);
+            $res = $this->verify($form['RefNum']);
         }
         // error in calling web method
         if($res === false){
@@ -450,17 +453,17 @@ class PaymentsController extends AppController{
         elseif(! is_numeric($res)){
             $verify = false;
             $msg = 'تراکنش با موفقیت انجام نشد';
-            $error = $this->__enErrorResponse[$res];
+            $error = $this->errorResponse[$res];
             
         // web method return negetive value
         }elseif($res < 0){
             $verify = false;
             $msg = 'تراکنش با موفقیت انجام نشد';
-            $error = $this->__enErrorVerify[$res];
+            $error = $this->errorVerify[$res];
         }else{
             
             //Save verify
-            $this->Payment->save(array('online_verify' => $res));
+            $this->Controller->Payment->save(array('online_verify' => $res));
             
             //TODO: We don't use this method because don't need it
             // if result > 0 means transaction is done, now call this method
@@ -473,13 +476,13 @@ class PaymentsController extends AppController{
             } elseif( $res > $payInfo['Payment']['price'] ) {
                 //web method partial reverse transaction
                 $revAmont = $res - $payInfo['Payment']['price'];
-                $reverse  = $this->_enReverseTrans($form['RefNum'], $revAmont );
+                $reverse  = $this->reverseTrans($form['RefNum'], $revAmont );
 
                 $msg = "کاربر گرامي  مبلغ پرداختي بيش از مبلغ درخواستي است";
                 
                 if( $reverse == 1 ) {
                     $msg .= "مابقي مبلغ پرداخت شده به حساب شما برگشت خورده";
-                    $this->Payment->save(array('verify' => $payInfo['Payment']['price']));
+                    $this->Controller->Payment->save(array('verify' => $payInfo['Payment']['price']));
                 } else {
                     $msg .= '<br /> مبلغ اضافه :'.$revAmont;
                     $msg .= "<br /> ما بقي مبلغ پرداختي شما در اينده اي نزديک به حساب شما برگشت خواهد خورد ";
@@ -491,7 +494,7 @@ class PaymentsController extends AppController{
                 $error = "مبلغ پرداختي شما کمتر از مبلغ سفارش است ";
                 
                 //web method full reverse transaction
-                $rev     = $this->_enReverseTrans( $res );
+                $rev     = $this->reverseTrans( $res );
                 if( $rev == 1 ) {
                     $msg = "کل مبلغ پرداختي به حساب شما برگشت خورده است";
                 } else {
@@ -502,23 +505,23 @@ class PaymentsController extends AppController{
             // Submit Payment if every things is OK
             if($verify){
                 //Save Status
-                $this->Payment->saveField('status',1);
+                $this->Controller->Payment->saveField('status',1);
             }
         }
         return compact('verify','error','msg');
     }
     
-    protected function _enVerify($refNum = null)
+    protected function verify($refNum = null)
     {
         if(empty($refNum)) {
             return false;
         }
-        $this->_enCreateSoap();
+        $this->createSoap();
         $soapProxy = $this->_nusoap->getProxy() ;
         $result     = false;
 
         for( $a=1;$a<6;++$a ) {
-            $result  = $soapProxy->VerifyTransaction($refNum , $this->__enMerchantID);
+            $result  = $soapProxy->VerifyTransaction($refNum , $this->merchantID);
             if( $result !== false ) {
                 break;
             }
@@ -526,43 +529,41 @@ class PaymentsController extends AppController{
         return $result;
     }
 
-    protected function _enReverseTrans( $refNumber , $price = 0)
+    protected function reverseTrans( $refNumber , $price = 0)
     {
         if( empty($refNumber) or empty($price)) {
             return false;
         }
-        $this->_enCreateSoap();
+        $this->createSoap();
         $soapProxy = $this->_nusoap->getProxy() ;
         $result     = false;
 
         for( $a=1;$a<6;++$a ) {
-            $result     = $soapProxy->reverseTransaction( $refNumber, $this->__enMerchantID, $this->__enPassword, $price );
+            $result     = $soapProxy->reverseTransaction( $refNumber, $this->merchantID, $this->password, $price );
             if( $result != false )
                 break;
         }
         return $result;
     }
     
-    protected function _enCreateSoap(){
+    protected function createSoap(){
         App::uses('soap_client', 'Utility');
         if($this->_nusoap)
             return;
-        $this->_nusoap = new soap_client($this->__enWSDL,'wsdl');
+        $this->_nusoap = new soap_client($this->WSDL,'wsdl');
         
     }
     
+}
+
+class tbPayment {
+    // Tejarat Bank
+    private $nusoap = null;
+    private $merchantID = 'F119';
+    private $WSDL = 'http://pg.sabapardazesh.net:9086/paymentGateway/services/merchant.wsdl';
+    private $URL = 'http://pg.sabapardazesh.net:9085/paymentGateway/page';
     
-// Tejarat Bank
-    /** Testing
-    private $__tbMerchantID = 'F119';
-    private $__tbWSDL = 'http://pg.sabapardazesh.net:9086/paymentGateway/services/merchant.wsdl';
-    private $__tbURL = 'http://pg.sabapardazesh.net:9085/paymentGateway/page';
-    */
-    private $__tbMerchantID = 'A244';
-    private $__tbWSDL = 'http://pg.tejaratbank.net/paymentGateway/services/merchant.wsdl';
-    private $__tbURL = 'https://pg.tejaratbank.net/paymentGateway/page';
-    
-    private $__tbErrorResponse = array(
+    private $errorResponse = array(
         '100' => 'موفقیت تراکنش',
         '110' => 'انصراف دارنده کارت',
         '120' => 'موجودی حساب کافی نیست',
@@ -578,7 +579,7 @@ class PaymentsController extends AppController{
         '201' => 'مبلغ تراکنش بیشتر از سقف مجاز در روز می باشد',
         '202' => 'مبلغ تراکنش بیشتر از سقف مجاز در ماه می باشد',
     );
-    private $__tbErrorVerify = array(
+    private $errorVerify = array(
         '-20' => 'وجود کاراکترهای غیرمجاز در درخواست',
         '-30' => 'تراکنش قبلا برگشت خورده است',
         '-50' => 'طول رشته درخواست غیرمجاز است',
@@ -587,29 +588,35 @@ class PaymentsController extends AppController{
         '-81' => 'خطای داخلی بانک',
         '-90' => 'تراکنش قبلا تایید شده است',
     );
-    protected function _tbSend(){
-        $this->set('mid',$this->__tbMerchantID);
-        $this->set('url',$this->__tbURL);
-        $this->render('send_tb');
+    private $Controller = null;
+    
+    public function __construct(&$Controller){
+        $this->Controller = $Controller;
     }
     
-    protected function _tbReceive(){
+    public function send(){
+        $this->Controller->set('mid',$this->merchantID);
+        $this->Controller->set('url',$this->URL);
+        $this->Controller->render('send_tb');
+    }
+    
+    public function receive(){
         // Get Info from bank
-        $form = $this->request->data;
+        $form = $this->Controller->request->data;
         if(empty($form)){
             return false;
         }
         
         $pay = array();
         $pay['result'] = $form['resultCode'];
-        $pay['ref_num'] = $form['referenceId'];
+        $pay['ref_num'] = @$form['referenceId'];
+        $pay['user_id'] = $this->Controller->Auth->user('id');
+        $pay['pay_date'] = Jalali::dateTime();
         $pay['type'] = 'آنلاین - بانک تجارت';
         $pay['status'] = 0;
-        $pay['person_id'] = $this->_givePersonInfo('Person.id');
-        $pay['pay_date'] = Jalali::dateTime();
         //Save info into table
-        $this->Payment->id = $form['paymentId'];
-        $payInfo = $this->Payment->find('first',array(
+        $this->Controller->Payment->id = $form['paymentId'];
+        $payInfo = $this->Controller->Payment->find('first',array(
             'conditions' =>array('id' => $form['paymentId']),
             'contain' => false,
         ));
@@ -620,10 +627,10 @@ class PaymentsController extends AppController{
         if($payInfo['Payment']['status']){
             return true;
         }
-        $this->Payment->save($pay);
+        $this->Controller->Payment->save($pay);
         
         //Read info from table
-        $payInfo = $this->Payment->read(null);
+        $payInfo = $this->Controller->Payment->read(null);
         
         // Construct this variables  
         $verify = false;
@@ -635,12 +642,12 @@ class PaymentsController extends AppController{
         // if every thing is OK call this method
         if($payInfo['Payment']['result'] == '100'){
             // verify
-            $res = $this->_tbVerify($payInfo['Payment']['ref_num']);
+            $res = $this->verify($payInfo['Payment']['ref_num']);
             // error in calling web method
             if($res > 0){
                 if($res == $payInfo['Payment']['price']){
                     //Save verify
-                    $this->Payment->save(array('status' => 1));
+                    $this->Controller->Payment->save(array('status' => 1));
                     $msg = 'تراکنش با موفقیت انجام شد';
                     $msg .= '<br />کد پیگیری : '.$payInfo['Payment']['ref_num'];
                     $verify = true;
@@ -649,104 +656,123 @@ class PaymentsController extends AppController{
             }else{
                 $verify = false;
                 $msg = 'تراکنش با موفقیت انجام نشد';
-                $error = $this->__tbErrorVerify[$res].'<br /> کد پیگیری : '.$payInfo['Payment']['ref_num'];
+                $error = $this->errorVerify[$res].'<br /> کد پیگیری : '.$payInfo['Payment']['ref_num'];
             }
         }else{
             $verify = false;
             $msg = 'تراکنش با موفقیت انجام نشد';
             $error = 'اشکال در تائید پرداخت ';
-            $error .= $this->__tbErrorResponse[$payInfo['Payment']['result']];
+            $error .= $this->errorResponse[$payInfo['Payment']['result']];
         }
         
         // Delete this row if hasn't pay
         if(! $verify){
-            $this->Payment->delete();
+            $this->Controller->Payment->delete();
         }
         
         return compact('verify','error','msg');
     }
     
-    protected function _tbCreateSoap(){
+    protected function createSoap(){
         App::import('Utility', 'Tejarat/nusoap');
         if($this->_nusoap)
             return;
-        $this->_nusoap = new nusoap_client($this->__tbWSDL,true);
+        $this->_nusoap = new nusoap_client($this->WSDL,true);
     }
     
-    protected function _tbVerify($ref_id){
+    protected function verify($ref_id){
         if(empty($ref_id)) {
             return false;
         }
-        $this->_tbCreateSoap();
+        $this->createSoap();
         $this->_nusoap->setUseCurl(0);
         $this->_nusoap->soap_defencoding = 'UTF-8';
         $this->_nusoap->decode_utf8 = true;
-        $this->_nusoap->setEndpoint($this->__tbWSDL);
+        $this->_nusoap->setEndpoint($this->WSDL);
         $params = array("verifyRequest" => array(
-            'merchantId' => $this->__tbMerchantID,
+            'merchantId' => $this->merchantID,
             'referenceNumber' => $ref_id
             )
         );
         return $this->_nusoap->call("verify", $params);
     }
+}
+
+class testPayment {
+    // Test Bank
+    private $nusoap = null;
+    private $merchantID = 'Test';
+    private $WSDL = false;
+    private $URL = false;
     
-// Post Bank
-    private $__pbMerchantID = '59000009';
-    private $__pbWSDL = 'https://www.pbi24.com/VirtualPOS/VPOS.asmx?wsdl';
-    private $__pbURL = 'https://www.pbi24.com/VirtualPOS/VPOS.aspx';
-    private $__pbErrorResponse = array(
-        '01' => 'خطا در انجام عملیات',
-        '02' => 'کد ورودی اشتباه می باشد',
-        '03' => 'مبلغ دریافتی اشتباه می باشد.',
-        '04' => 'شماره کارت ورودی اشتباه می باشد',
-        '05' => 'ورودی اشتباه می باشد',
-        '06' => 'تاریخ انقضا ورودی اشتباه می باشد',
-        '07' => 'رمز دوم ورودی اشتباه می باشد',
-        '08' => 'خطای سیستمی',
-        '09' => 'خطای سیستمی',
-        '10' => 'خطای اجرا از شتاب',
-        '11' => 'خطای نامشخص',
-        '12' => 'کد فروشگاه اشتباه است',
-        '13' => 'درخواست کننده معتبر نمی باشد',
+    private $errorResponse = array(
+        '100' => 'موفقیت تراکنش',
+        '110' => 'انصراف دارنده کارت',
+        '120' => 'موجودی حساب کافی نیست',
+        '130' => 'اطلاعات کارت اشتباه است',
+        '131' => 'رمز کارت اشتباه است',
+        '132' => 'کارت مسدود شده است',
+        '133' => 'کارت منقضی شده است',
+        '140' => 'زمان موردنظر به پایان رسیده است',
+        '150' => 'خطای داخلی بانک',
+        '160' => 'خطا در اطلاعات CVV2 یا تاریخ انقضا',
+        '166' => 'بانک صادر کننده کارت شما مجوز انجام تراکنش را صادر نکرده است',
+        '200' => 'مبلغ تراکنش بیشتر از سقف مجاز در هر تراکنش می باشد',
+        '201' => 'مبلغ تراکنش بیشتر از سقف مجاز در روز می باشد',
+        '202' => 'مبلغ تراکنش بیشتر از سقف مجاز در ماه می باشد',
     );
-    protected function _pbSend(){
-        $this->set('mid',$this->__pbMerchantID);
-        $this->set('url',$this->__pbURL);
-        $this->render('send_pb');
+    private $errorVerify = array(
+        '-20' => 'وجود کاراکترهای غیرمجاز در درخواست',
+        '-30' => 'تراکنش قبلا برگشت خورده است',
+        '-50' => 'طول رشته درخواست غیرمجاز است',
+        '-51' => 'خطا در درخواست',
+        '-80' => 'تراکنش مورد نظر یافت نشد',
+        '-81' => 'خطای داخلی بانک',
+        '-90' => 'تراکنش قبلا تایید شده است',
+    );
+    private $Controller = null;
+    
+    public function __construct(&$Controller){
+        $this->Controller = $Controller;
     }
     
-    protected function _pbReceive(){
+    public function send(){
+        $this->Controller->set('mid',$this->merchantID);
+        $this->Controller->set('url',$this->URL);
+        $this->Controller->render('send_test');
+    }
+    
+    public function receive(){
         // Get Info from bank
-        $form = $this->request->query;
+        $form = $this->Controller->request->data;
         if(empty($form)){
             return false;
         }
         
         $pay = array();
-        $response = $form['RequestResponse'];
-        $response = explode(',', $response);
-        $pay['result'] = $response[0];
-        $pay['ref_num'] = @$response[2];
-        $pay['pb_card'] = @$response[3];
-        $pay['type'] = 'آنلاین - پست بانک';
+        $pay['result'] = $form['resultCode'];
+        $pay['ref_num'] = @$form['referenceId'];
+        $pay['user_id'] = $this->Controller->Auth->user('id');
+        $pay['pay_date'] = Jalali::dateTime();
+        $pay['type'] = 'آنلاین - تست';
         $pay['status'] = 0;
         //Save info into table
-        $this->Payment->id = $form['CustomerId'];
-        $payInfo = $this->Payment->find('first',array(
-            'conditions' =>array('id' => $form['CustomerId']),
+        $this->Controller->Payment->id = $form['paymentId'];
+        $payInfo = $this->Controller->Payment->find('first',array(
+            'conditions' =>array('id' => $form['paymentId']),
             'contain' => false,
         ));
         if(empty($payInfo)){
             return false;
         }
-        // This request is payed before
+        // This request is payed
         if($payInfo['Payment']['status']){
             return true;
         }
-        $this->Payment->save($pay);
+        $this->Controller->Payment->save($pay);
         
         //Read info from table
-        $payInfo = $this->Payment->read(null);
+        $payInfo = $this->Controller->Payment->read(null);
         
         // Construct this variables  
         $verify = false;
@@ -756,67 +782,22 @@ class PaymentsController extends AppController{
         $res = false;
         
         // if every thing is OK call this method
-        if($payInfo['Payment']['result'] == '00'){
-            // verify
-            $res = $this->_pbVerify($payInfo['Payment']['pb_card'], $payInfo['Payment']['ref_num'], $payInfo['Payment']['price']);
-            // error in calling web method
-            if($res){
-                //Save verify
-                $this->Payment->save(array('status' => 1));
-                $verify = true;
-            }else{
-                $verify = false;
-                $msg = 'تراکنش با موفقیت انجام نشد';
-                $error = 'اشکال در تائید پرداخت'.'<br /> کد پیگری : '.$payInfo['Payment']['ref_num'];
-            }
+        if($payInfo['Payment']['result'] == '100'){
+            //Save verify
+            $this->Controller->Payment->save(array('status' => 1));
+            $msg = 'تراکنش با موفقیت انجام شد';
+            $msg .= '<br />کد پیگیری : '.$payInfo['Payment']['ref_num'];
+            $verify = true;
         }else{
             $verify = false;
             $msg = 'تراکنش با موفقیت انجام نشد';
-            $error = 'اشکال در تائید پرداخت';
-            $error = $this->__pbErrorResponse[$payInfo['Payment']['result']];
-            if(!empty($payInfo['Payment']['ref_num'])){
-                $error.= '<br /> کد پیگری : '.$payInfo['Payment']['ref_num'];
-            }
+            $error = 'اشکال در تائید پرداخت ';
+            $error .= $this->errorResponse[$payInfo['Payment']['result']];
         }
-        
         // Delete this row if hasn't pay
         if(! $verify){
-            $this->Payment->delete();
+            $this->Controller->Payment->delete();
         }
-        
         return compact('verify','error','msg');
-    }
-    
-    protected function _pbCreateSoap(){
-        App::uses('soap_client', 'Utility');
-        if($this->_nusoap)
-            return;
-        $this->_nusoap = new soap_client($this->__pbWSDL,'wsdl');
-    }
-    
-    protected function _pbVerify($card, $trace, $amount){
-        if(empty($card)) {
-            return false;
-        }
-        $this->_pbCreateSoap();
-        $soapProxy = $this->_nusoap->getProxy() ;
-        $result     = false;
-
-        for( $a=1;$a<6;++$a ) {
-            $result  = $soapProxy->TraceCheckWithAmount($card, $trace, $amount, $this->__pbMerchantID);
-            if( $result !== 'false' ) {
-                $result = true;
-                break;
-            }
-            $result = false;
-        }
-        
-        return $result;
-    }
-    
-    protected function _addTax($price, $priceWithTax = true){
-        if($priceWithTax)
-            return intval($price + (5 * $price / 100));
-        return intval(5 * $price / 100);
     }
 }

@@ -6,7 +6,7 @@ App::uses('ShopAppController', 'Shop.Controller');
  */
 class OrdersController extends ShopAppController {
     
-    public $uses = array('Shop.FactorHead', 'Shop.FactorItem', 'Shop.Deport');
+    public $uses = array('Shop.FactorHead', 'Shop.FactorItem', 'Shop.Deport', 'Shop.Stuff');
     
     public $paginateConditions = array(
         'type' => array(
@@ -20,6 +20,10 @@ class OrdersController extends ShopAppController {
             'field' => 'FactorHead.number',
             'type' => 'LIKE',
         ),
+    );
+    
+    public $paginate = array(
+        'order' => 'FactorHead.id DESC',
     );
     
     public $publicActions = array(
@@ -118,7 +122,7 @@ class OrdersController extends ShopAppController {
         $head['final_price'] = $total - (int)$this->request->data('discount');
         $this->FactorHead->create();
         if ($this->FactorHead->save($head)) {
-            echo $this->FactorHead->id;
+        	$this->_changeStatus($this->FactorHead->id, 1);
             $item = array('head_id' => $this->FactorHead->id);
             foreach( $itemsWithCount as $code => $itm){
                 $item['stuff_id'] = $itemsInfo[$code]['id'];
@@ -161,7 +165,7 @@ class OrdersController extends ShopAppController {
         $head['final_price'] = $total - (int)$this->request->data('discount');
         $this->FactorHead->create();
         if ($this->FactorHead->save($head)) {
-            echo $this->FactorHead->id;
+            $this->_changeStatus($this->FactorHead->id, 1);
             $item = array('head_id' => $this->FactorHead->id);
             foreach( $itemsWithCount as $code => $count){
                 $item['stuff_id'] = $itemsInfo[$code]['id'];
@@ -183,11 +187,10 @@ class OrdersController extends ShopAppController {
 
 /**
  * admin_edit method
- *
+ * //TODO: This function not work
  * @param string $id
  * @return void
  */
-  //TODO: This function must save gallery images for stuff
     public function admin_edit($id = null) {
         
         $this->helpers[] = 'TinyMCE.TinyMCE';
@@ -222,7 +225,6 @@ class OrdersController extends ShopAppController {
  * @param string $id
  * @return void
  */
- //TODO: This function is not complete, must check the stuff is not used in factors, or gallery image of it must be deleted
     public function admin_delete() {
         if (!$this->request->is('post')) {
             throw new MethodNotAllowedException(SettingsController::read('Error.Code-12'));
@@ -247,21 +249,17 @@ class OrdersController extends ShopAppController {
                     $countAffected++;
                 }
             }
-            $this->Session->setFlash($countAffected . ' سفارش منو حذف گردید', 'message', array('type' => 'success'));
+            $this->Session->setFlash($countAffected . ' سفارش حذف گردید', 'message', array('type' => 'success'));
         }
         $this->redirect($this->referer());
     }
-
-    public function admin_publish() {
-        $this->_changeStatus('FactorHead', 'published', 1, 'سفارش با موفقیت منتشر شد.');
-        $this->redirect($this->referer());
-    }
-
-    public function admin_unPublish() {
-        $this->_changeStatus('FactorHead', 'published', 0, 'سفارش با موفقیت از حالت انتشار خارج شد.');
-        $this->redirect($this->referer());
-    }
     
+/**
+ * Add stuff to cart
+ * This function can only used via AJAX, because it hasn't view
+ * 
+ * @return Count of Stuffs that exists in Cart
+ */
     public function addToCart() {
         $this->autoRender = false;
         if (!$this->request->is('post')) {
@@ -272,10 +270,9 @@ class OrdersController extends ShopAppController {
         if($count == 0){
             return 'تعداد صحیح وارد شود.';
         }
-        $this->loadModel('Shop.Stuff');
         $stuff = $this->Stuff->find('first', array('conditions' => array('id' => $stuff_id, 'published' => true, 'count >=' => $count ), 'contain' => false));
         if(empty($stuff)){
-            return 'مجاز به خرید این کالا نمی باشید.';
+            return 'به اندازه تعداد درخواستی کالا در انبار موجود نمی باشد.';
         }
         
         $this->Session->write('Cart.item.'.$stuff_id, $count);
@@ -283,6 +280,12 @@ class OrdersController extends ShopAppController {
         return count($this->Session->read('Cart.item'));
     }
     
+/**
+ * Remove stuff from cart
+ * Called only by POST request
+ * 
+ * @return void
+ */
     public function deleteFromCart($stuff_id) {
         if (!$this->request->is('post')) {
             $this->Session->setFlash('درخواست معتبر نمی باشد', 'message', array('type' => 'error'));
@@ -302,20 +305,41 @@ class OrdersController extends ShopAppController {
         
     }
     
+/**
+ * View Cart
+ * 
+ */
     public function viewCart(){
-        $items = $this->Session->read('Cart.item');
+        
+		$stuffs = $this->_readStuffFromCart();
+        $this->set('deports', $this->Deport->find('all'));
+        $this->set('stuffs', $stuffs);
+        return $stuffs;
+    }
+	
+/**
+ * Read Stuff from cart and fetch other info for it from Tables
+ */
+	protected function _readStuffFromCart(){
+		$items = $this->Session->read('Cart.item');
+		if(empty($items)){
+            $this->Session->setFlash('سبد خرید خالی می باشد.', 'message', array('type' => 'error'));
+            $this->redirect($this->referer());
+        }
         $stuffs = array();
-        $this->loadModel('Shop.Stuff');
         if($items){
             foreach($items as $stuff_id => $count){
                 $stuffs[] = $this->Stuff->find('first', array('conditions' => array('Stuff.id' => $stuff_id, 'Stuff.published' => true, 'count >=' => $count )));
             }
         }
-        $this->set('deports', $this->Deport->find('all'));
-        $this->set('stuffs', $stuffs);
-        return $stuffs;
-    }
+		return $stuffs;
+	}
     
+/**
+ * Empty Cart
+ * Empty cart and redirect to referer
+ * 
+ */
     public function emptyCart(){
         if (!$this->request->is('post')) {
             $this->Session->setFlash('درخواست معتبر نمی باشد', 'message', array('type' => 'error'));
@@ -326,30 +350,35 @@ class OrdersController extends ShopAppController {
         $this->redirect($this->referer());
     }
     
+/**
+ * Add Coupon to cart
+ * This used via AJAX
+ */
     public function addCoupon(){
         $this->autoRender = false;
         if (!$this->request->is('post')) {
             return false;
         }
-        $coupon_number = $this->request->data('coupon');
-        $couponObj = $this->_loadController('Shop.Coupons');
-        $coupon = $couponObj->_canUseCoupon(null, $coupon_number);
+        $coupon = $this->_loadController('Shop.Coupons')->_canUseCoupon(null, $this->request->data('coupon'));
         if(empty($coupon)){
             return 'کوپن یافت نشد.';
         }
         
         $this->Session->write('Cart.coupon', $coupon['Coupon']);
-        //TODO: Must send Coupon value if discount type is Price, else calculate value if type is Percent
+        //Send value with type, so if type is percent, calculate and show it
         return json_encode(array('type' => $coupon['Coupon']['discount_type'], 'value' => $coupon['Coupon']['discount_value']));
     }
     
+/**
+ * Set deport for cart
+ * This used via AJAX
+ */
     public function setDeport(){
         $this->autoRender = false;
         if (!$this->request->is('post')) {
             return false;
         }
         $deport_id = $this->request->data('deport_id');
-        $this->loadModel('Shop.Deport');
         if($deport_id == 0){
             $this->Session->delete('Cart.deport');
             return true;
@@ -363,6 +392,10 @@ class OrdersController extends ShopAppController {
         return true;
     }
     
+/**
+ * Delete Coupon from cart
+ * Used via POST request
+ */
     public function deleteCoupon(){
         if (!$this->request->is('post')) {
             $this->Session->setFlash('درخواست معتبر نمی باشد', 'message', array('type' => 'error'));
@@ -375,21 +408,12 @@ class OrdersController extends ShopAppController {
     
     public function submitCart(){
         //TODO: Check tax for any stuff
-        $items = $this->Session->read('Cart.item');
-        if(empty($items)){
-            $this->Session->setFlash('سبد خرید خالی می باشد.', 'message', array('type' => 'error'));
-            $this->redirect($this->referer());
-        }
         if(!$this->_userIsLogin()){
             $this->redirect(array('action' => 'register'));
         }
-        $this->loadModel('Shop.Stuff');
-        $stuffs = array();
-        if($items){
-            foreach($items as $stuff_id => $count){
-                $stuffs[] = $this->Stuff->find('first', array('conditions' => array('Stuff.id' => $stuff_id, 'Stuff.published' => true, 'count >=' => $count )));
-            }
-        }
+        
+        $stuffs = $this->_readStuffFromCart();
+		
         $total = 0;
         if($stuffs){
             foreach($stuffs as $stuff){
@@ -397,10 +421,12 @@ class OrdersController extends ShopAppController {
                 if(!empty($stuff['Stuff']['discount'])){
                     $price = $stuff['Stuff']['PriceWithDiscount'];
                 }
+				// Multiple price with count and add to total
                 $total += $price * $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
             }
         }
         $finalPrice = $total;
+		
         /**
          * Coupon
          */
@@ -411,12 +437,14 @@ class OrdersController extends ShopAppController {
                 $finalPrice -=$this->Session->read('Cart.coupon.discount_value');
             }
         }
+		
         /**
          * Deport
          */
         if($this->Session->check('Cart.deport')){
             $finalPrice +=$this->Session->read('Cart.deport.price');
         }
+		
         /**
          * Tax
          */
@@ -437,53 +465,59 @@ class OrdersController extends ShopAppController {
             'final_price' => $finalPrice,
             
         );
+        
         if($this->FactorHead->save($factorHead)){
             $this->FactorHead->saveField('number',$factorHead['number'].$this->FactorHead->id );
-            foreach($stuffs as $stuff){
-                $count = $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
-                $price = $stuff['Stuff']['price'];
-                if(!empty($stuff['Stuff']['discount'])){
-                    $price = $stuff['Stuff']['PriceWithDiscount'];
-                }
-                $factorItem = array(
-                    'head_id' => $this->FactorHead->id,
-                    'stuff_id' => $stuff['Stuff']['id'],
-                    'count' => $count,
-                    'price' => $price,
-                    'total_price' => $price * $count,
-                );
-                $this->FactorItem->create();
-                if($this->FactorItem->save($factorItem)){
-                    $this->Stuff->updateAll(
-                        array('Stuff.count' => 'Stuff.count - '.$count),
-                        array('Stuff.id' => $factorItem['stuff_id'])
-                    );
-                }
-            }
-            $coupon = $this->_loadController('Shop.Coupons');
-            $coupon->_useCoupon($factorHead['coupon_id'], $this->FactorHead->id);
-            $this->Session->delete('Cart');
+            $this->_changeStatus($this->FactorHead->id, -2);
+			
+            // Now after we save factor, we must redirect user to payment
+            // We save only factor head and no change in count of stuffs,
+            //TODO: remove save factor head and when user purchased, then add to tables
+            $this->redirect(array('action' => 'sendPayment', $this->FactorHead->id));
         }else{
             $this->Session->setFlash('اشکال در ثبت سفارش', 'message', array('type' => 'error'));
             $this->redirect(array('action' => 'viewCart'));
         }
-        $this->redirect(array('action' => 'viewFactor', $this->FactorHead->id));
     } 
     
+/**
+ * View saved factor
+ */
     public function viewFactor($factorID = null){
-        if(empty($factorID)){
+        $factor = $this->_readFactorFromUser($factorID);
+        if(empty($factor)){
             $this->Session->setFlash('فاکتور یافت نشد.', 'message', array('type' => 'error'));
-            $this->redirect('/');
+            $this->redirect(array('action' => 'index'));
         }
-        $this->FactorHead->recursive = 2;
-        $factor = $this->FactorHead->read(null, $factorID);
+		// Check if user want see factor and factor paymented, so fetch payment info
+        if($this->action == 'viewFactor' and $factor['FactorHead']['status'] > 0){
+            $this->set('payInfo', $this->_getPaymentInfo($factorID));
+        }
         $this->set(compact('factor'));
+        return $factor;
+    }
+    
+    protected function _getPaymentInfo($factorID){
+        return $this->_loadController('Payments')->_getPaymentInfo('shop-'.$factorID);
+    }
+    
+    protected function _readFactorFromUser($factorID){
+        $this->FactorHead->recursive = 2;
+        return $this->FactorHead->find('first', array(
+            'conditions' => array(
+                'FactorHead.id' => $factorID, 
+                'FactorHead.user_id' => $this->Auth->user('ShopUser.id'), 
+            ),
+        ));
     }
     protected function _userIsLogin(){
         return $this->Auth->loggedIn();
     }
     
+	//TODO: We must use UserController for this action
     public function register($type = null){
+        $this->loadModel('State');
+        $this->set('states', $this->State->find('threaded'));
         if ($this->request->is('post')) {
             $user = $this->_loadController('Users');
             $shop_user = $this->_loadController('Shop.User');
@@ -510,6 +544,8 @@ class OrdersController extends ShopAppController {
                         'address' => $this->request->data['address'],
                         'phone' => $this->request->data['phone'],
                         'mobile' => $this->request->data['mobile'],
+                        'code_posti' => $this->request->data['code_posti'],
+                        'city' => $this->request->data['city'],
                     ));
                     if(! $shop_user_id){
                         return;
@@ -526,6 +562,111 @@ class OrdersController extends ShopAppController {
         }
     }
     
+/**
+ * Initialize Payment params and redirect user to 
+ *  payment page
+ * 
+ * 
+ * @return void
+ */
+	public function sendPayment($factorID){
+	   // This function read factor and if has error redirect user to index page
+	   $factor = $this->viewFactor($factorID);
+       
+	   
+       // get Ref ID
+       $refID = 'shop-'.$factor['FactorHead']['id'];
+       
+       // get Object 
+       $pay = $this->_loadController('Payments');
+       
+       // Check payment info
+       $payInfo = $pay->_getPaymentInfo($refID);
+
+       if($payInfo){
+            $this->Session->setFlash('فاکتور قبلا پرداخت شده است.', 'message', array('type' => 'warning'));
+            $this->redirect(array('action' => 'viewFactor', $factorID));
+        
+        // if has no payment info and data is sent, execute this
+       }else{
+            $price = $factor['FactorHead']['final_price'];
+            $section = sprintf('فاکتور خرید <b>%s</b> به شماره خرید <b>%s</b>', $factor['ShopUser']['User']['name'], $factor['FactorHead']['number']);
+            // Set Parameters for this payment
+    		$pay->_setParams($price,array('controller' => 'Orders','action' => 'submitFactor', 'plugin' => 'Shop', $factor['FactorHead']['id']),$refID,array('Section' => $section, 'noTax' => true));
+            
+            // redirect to payment page
+    		$this->redirect($pay->_sendPage());
+        }
+      
+	}
+
+
+    public function submitFactor($factorID){
+        $factor = $this->viewFactor($factorID);
+        $refID = 'shop-'.$factorID;// get Ref ID
+        $pay = $this->_loadController('Payments');// get Object 
+        $payInfo = $pay->_getPaymentInfo($refID);// Check payment info
+        
+        if($payInfo and $payInfo['status'] > 0){
+        	
+            $stuffs = $this->_readStuffFromCart();
+            
+            foreach($stuffs as $stuff){
+                $count = $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
+                $price = $stuff['Stuff']['price'];
+                if(!empty($stuff['Stuff']['discount'])){
+                    $price = $stuff['Stuff']['PriceWithDiscount'];
+                }
+                $factorItem = array(
+                    'head_id' => $factorID,
+                    'stuff_id' => $stuff['Stuff']['id'],
+                    'count' => $count,
+                    'price' => $price,
+                    'total_price' => $price * $count,
+                );
+                $this->FactorItem->create();
+                if($this->FactorItem->save($factorItem)){
+                    $this->Stuff->updateAll(
+                        array('Stuff.count' => 'Stuff.count - '.$count),
+                        array('Stuff.id' => $factorItem['stuff_id'])
+                    );
+                }
+            }
+            $coupon = $this->_loadController('Shop.Coupons');
+            $coupon->_useCoupon($factor['FactorHead']['coupon_id'], $this->FactorHead->id);
+            $this->Session->delete('Cart');
+            $this->_changeStatus($factorID, 1);
+            $this->Session->setFlash('پرداخت با موفقیت انجام گردید', 'message', array('type' => 'success'));
+            $this->redirect(array('action' => 'viewFactor', $factorID));
+        }
+        $this->Session->setFlash('اشکال در پرداخت', 'message', array('type' => 'error'));
+        $this->redirect(array('action' => 'viewFactor', $factorID));
+    }
+    
+/**
+ * for Each changes in status of factor, we must store User, State, Date of any change 
+ */
+    protected function _changeStatus($factorID, $status){
+        $this->FactorHead->id = $factorID;
+        $this->FactorHead->recursive = -1;
+        $factor = $this->FactorHead->read(array('status', 'status_dates'));
+        $dates = json_decode($factor['FactorHead']['status_dates']);
+        $dates[] = array(
+            'u' => $this->Auth->user('id'),
+            's' => $status,
+            'd' => Jalali::dateTime(),
+        );
+        $dates = json_encode($dates);
+        return $this->FactorHead->save(array('status' => $status, 'status_dates' => $dates)); 
+    }
+    
+/**
+ * fetch info of sell orders,
+ * This function can use only from requestAction function
+ * 
+ * @passedArgs  status (status of order), type (type of find such as all, count, list, ...)
+ * @return Info of sell orders
+ */
     public function admin_getSellOrders(){
         $status = 0;
         if(!empty($this->passedArgs['status'])){ $status = $this->passedArgs['status']; }
@@ -539,14 +680,14 @@ class OrdersController extends ShopAppController {
             ),
         ));
     }  
-    /**
-     * List Orders of current user
-     */
+/**
+ * List Orders of current user
+ */
     public function index(){
         unset($this->paginateConditions['type']);
         $this->paginate['conditions'] = array(
             'ShopUser.id' => $this->Auth->user('ShopUser.id'),
-        );
+        ); 
         $orders = $this->paginate();
         $this->set(compact('orders'));
         $this->set('title', $this->pageTitle);
@@ -554,25 +695,36 @@ class OrdersController extends ShopAppController {
         $this->set('namedStatus', $this->FactorHead->namedStatus);
     } 
     
+/**
+ * fetch Statistics
+ * This function can use only from requestAction function
+ * 
+ * @return return follow items 
+ * 				newOrders : count of new orders,
+ *  			todayOrders : count of new orders that submitted in today,
+ * 				favoriteStuff : {name,count} of stuff that more than others ordered in new orders,
+ * 				newestFactors : info of 5 newest orders,
+ * 				newestFactors : info of 5 newest orders,
+ */
     public function admin_getStatistics(){
         $stats = array();
         $stats['newOrders'] = $this->FactorHead->find('count', array(
             'conditions' => array(
                 'FactorHead.type' => 2,
-                'FactorHead.status' => 0,
+                'FactorHead.status' => 1,
             ),
         ));
         $stats['todayOrders'] = $this->FactorHead->find('count', array(
             'conditions' => array(
                 'FactorHead.type' => 2,
-                'FactorHead.status' => 0,
+                'FactorHead.status' => 1,
                 'FactorHead.date' => Jalali::date('Y/m/d'),
             ),
         ));
         $favoriteStuff = $this->FactorItem->find('first', array(
             'conditions' => array(
                 'FactorHead.type' => 2,
-                'FactorHead.status >' => 0,
+                'FactorHead.status >=' => 1,
             ),
             'fields' => array('Stuff.name', 'count(*) * FactorItem.count as c'),
             'contain' => array('Stuff', 'FactorHead'),
@@ -585,7 +737,7 @@ class OrdersController extends ShopAppController {
         $newestFactors = $this->FactorHead->find('all', array(
             'conditions' => array(
                 'FactorHead.type' => 2,
-                'FactorHead.status' => 0,
+                'FactorHead.status' => 1,
             ),
             'order' => 'FactorHead.id DESC',
             'contain' => 'ShopUser.User',
@@ -593,18 +745,9 @@ class OrdersController extends ShopAppController {
         ));
         $stats['newestFactors'] = $newestFactors;
         
-        $notSentFactors = $this->FactorHead->find('all', array(
-            'conditions' => array(
-                'FactorHead.type' => 2,
-                'FactorHead.status' => 1,
-            ),
-            'order' => 'FactorHead.id DESC',
-            'contain' => 'ShopUser.User',
-            'limit' => 5,
-        ));
-        $stats['notSentFactors'] = $notSentFactors;
         return $stats;
     }
+
     public function admin_details($factorID = null){
         if(empty($factorID)){
             $this->Session->setFlash('سفارش یافت نشد.', 'message', array('type' => 'error'));

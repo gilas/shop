@@ -23,7 +23,7 @@
         <li class="dropdown">
             <?php
               $newOrders = null;
-              $count = $this->requestAction(array('controller' => 'Orders', 'action' => 'getSellOrders', 'admin' => true, 'plugin' => 'Shop', 'status' => 0, 'type' => 'count'));
+              $count = $this->requestAction(array('controller' => 'Orders', 'action' => 'getSellOrders', 'admin' => true, 'plugin' => 'Shop', 'status' => 1, 'type' => 'count'));
               if($count){
                   $newOrders = $this->Html->tag('span', $count, array('class' => 'count'));
               }

@@ -6,9 +6,12 @@ class Payment extends AppModel{
         '0' => 'بررسی نشده',
         '1' => 'تائید شده',
     );
-    
-    public $belongsTo = array('Person');
-    
+    public $formattedStatus = array(
+        '-1' => '<label class="label label-important">تائید نشده</label>',
+        '0' => '<label class="label label-warning">بررسی نشده</label>',
+        '1' => '<label class="label label-success">تائید شده</label>',
+    );
+    public $belongsTo = array('User');
     public function afterFind($results){
         if(empty($results)){
             return $results;
@@ -16,6 +19,7 @@ class Payment extends AppModel{
         if($this->findQueryType != 'count'){
             foreach($results as &$result){
                 $result['Payment']['namedStatus'] = @$this->status[$result['Payment']['status']];
+                $result['Payment']['formattedStatus'] = @$this->formattedStatus[$result['Payment']['status']];
             }
         }
         return $results;

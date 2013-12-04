@@ -11,7 +11,8 @@
 
 class UsersController extends AppController {
     
-    public $publicActions = array('login', 'logout','register');
+    // We won't use This actions, because we use Shop.User actions
+    //public $publicActions = array('login', 'logout','register');
     
     public $paginateConditions = array(
         'username' => array(

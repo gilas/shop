@@ -44,6 +44,21 @@ $this->Html->addCrumb('ثبت نام یا ورود کاربر');
         </div>
         <div class="row row-pad">
             <div class="span8">
+                <label>استان/شهر</label>
+                <select name="data[city]">
+                    <option value="">-- انتخاب کنید --</option>
+                    <?php echo $this->Html->getCityAsOptionTag($states); ?>
+                </select>
+            </div>
+        </div>
+        <div class="row row-pad">
+            <div class="span8">
+                <label>کد پستی</label>
+                <input type="text" name="data[code_posti]" />
+            </div>
+        </div>
+        <div class="row row-pad">
+            <div class="span8">
                 <label>آدرس دقیق پستی</label>
                 <input type="text" name="data[address]" />
             </div>

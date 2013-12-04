@@ -10,6 +10,10 @@ class ShopUser extends ShopAppModel {
             'className' => 'Shop.Group',
             'foreignKey' => 'group_id',
         ),
+        'City' => array(
+            'className' => 'State',
+            'foreignKey' => 'city',
+        ),
     );
     
     public $namedType = array(
