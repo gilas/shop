@@ -13,8 +13,9 @@ class CouponsController extends ShopAppController {
     
     public function admin_index(){
         $this->pageTitle = $this->_getParentTitle();
+        $this->paginate['contain'] = 'FactorHead';
         $coupons = $this->paginate();
-        
+
         // add this helper for using FilterHelper in Filter Form
         $this->helpers[] = 'AdminForm';
         $namedType = $this->Coupon->namedType;

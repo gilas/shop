@@ -412,17 +412,27 @@ class OrdersController extends ShopAppController {
             $this->redirect(array('action' => 'register'));
         }
         
+        if(! $this->Session->check('Cart.deport')){
+            $this->Session->setFlash('لطفا روش ارسال را انتخاب نمایید', 'message', array('type' => 'error'));
+            $this->redirect(array('action' => 'viewCart'));
+        }
+        
         $stuffs = $this->_readStuffFromCart();
 		
         $total = 0;
+        $totalTax = 0; 
         if($stuffs){
             foreach($stuffs as $stuff){
                 $price = $stuff['Stuff']['price'];
                 if(!empty($stuff['Stuff']['discount'])){
                     $price = $stuff['Stuff']['PriceWithDiscount'];
                 }
+                $t = $price * $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
 				// Multiple price with count and add to total
-                $total += $price * $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
+                $total += $t;
+                if(!empty($stuff['Tax']['percent'])){
+                    $totalTax += $t * $stuff['Tax']['percent'] / 100;
+                }
             }
         }
         $finalPrice = $total;
@@ -445,13 +455,7 @@ class OrdersController extends ShopAppController {
             $finalPrice +=$this->Session->read('Cart.deport.price');
         }
 		
-        /**
-         * Tax
-         */
-        if($this->Session->check('Cart.tax')){
-            $percent = $this->Session->read('Cart.tax.percent');
-            $finalPrice += $finalPrice * $percent / 100;
-        }
+        $finalPrice += $totalTax;
         
         $factorHead = array(
             'user_id' => $this->Auth->user('ShopUser.id'),
@@ -502,12 +506,12 @@ class OrdersController extends ShopAppController {
     }
     
     protected function _readFactorFromUser($factorID){
-        $this->FactorHead->recursive = 2;
         return $this->FactorHead->find('first', array(
             'conditions' => array(
                 'FactorHead.id' => $factorID, 
                 'FactorHead.user_id' => $this->Auth->user('ShopUser.id'), 
             ),
+            'contain' => array('Items.Stuff.Tax', 'ShopUser.User', 'Coupon', 'Deport'),
         ));
     }
     protected function _userIsLogin(){
@@ -532,6 +536,7 @@ class OrdersController extends ShopAppController {
                         'name' => $this->request->data['name'],
                         'username' => $this->request->data['username'],
                         'password' => $this->request->data['password'],
+                        'email' => $this->request->data['email'],
                         'role_id' => 18,
                         'active' => true,
                     ));
@@ -753,8 +758,10 @@ class OrdersController extends ShopAppController {
             $this->Session->setFlash('سفارش یافت نشد.', 'message', array('type' => 'error'));
             $this->redirect('/');
         }
-        $this->FactorHead->recursive = 2;
-        $factor = $this->FactorHead->read(null, $factorID);
+        $factor = $this->FactorHead->find('first', array(
+            'conditions' => array('FactorHead.id' => $factorID, ),
+            'contain' => array('Items.Stuff.Tax', 'ShopUser.User', 'Coupon', 'Deport'),
+        ));
         $this->set(compact('factor'));
         $this->pageTitle = 'مشاهده سفارش';
         $this->set('title', $this->pageTitle);

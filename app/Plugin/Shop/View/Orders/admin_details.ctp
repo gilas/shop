@@ -35,7 +35,14 @@ $this->Html->addCrumb($title);
                     <th>قیمت واحد</th>
                     <th>مبلغ</th>
                 </tr>
-                <?php $index = 0; foreach($factor['Items'] as $item): ?>
+                <?php 
+                $index = 0; 
+                $totalTax = 0;
+                foreach($factor['Items'] as $item):
+                if(!empty($item['Stuff']['Tax']['percent'])){
+                    $totalTax += $item['total_price'] * $item['Stuff']['Tax']['percent'] / 100;
+                }
+                ?>
                 <tr>
                     <td><?php echo ++$index; ?></td>
                     <td><?php echo $item['Stuff']['name'] . ' ('.$item['Stuff']['code'].')'; ?></td>
@@ -65,8 +72,8 @@ $this->Html->addCrumb($title);
                     <td id="grid-align"><?php echo number_format($factor['Deport']['price']); ?></td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="text-align: left;">مالیات (<?php echo $factor['Tax']['percent'] ?> %)</td>
-                    <td id="grid-align"><?php echo number_format($factor['FactorHead']['final_price'] * $factor['Tax']['percent'] / 100); ?></td>
+                    <td colspan="4" style="text-align: left;">مالیات</td>
+                    <td id="grid-align"><?php echo number_format($totalTax); ?></td>
                 </tr>
                 <tr>
                     <td colspan="4" style="text-align: left;">جمع نهایی</td>

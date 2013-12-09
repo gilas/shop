@@ -65,6 +65,35 @@ class UserController extends ShopAppController {
     }
     
     /**
+     * Edit information of current user
+     */
+    public function edit(){
+        $user = $this->ShopUser->read(null, $this->Auth->user('ShopUser.id'));
+        $this->set(compact('user'));
+        if($this->request->is('post')){
+            if($this->request->data('User.password') != $this->request->data('User.password1')){
+                $this->Session->setFlash('رمز عبور با تکرار آن برابر نیست', 'message', array('type' => 'error'));
+            }
+            $shopUser = array(
+                'mobile' => $this->request->data('User.mobile'),
+                'phone' => $this->request->data('User.phone'),
+                'address' => $this->request->data('User.address'),
+            );
+            $this->ShopUser->id = $this->Auth->user('ShopUser.id');
+            $this->ShopUser->save($shopUser);
+            
+            $user = array(
+                'name' => $this->request->data('User.name'),
+                'email' => $this->request->data('User.email'),
+                'password' => $this->request->data('User.password'),
+            );
+            $this->baseUser->_updateUser($this->Auth->user('ShopUser.user_id'), $user);
+            $this->Session->setFlash('اطلاعات کاربر ویرایش گردید.', 'message', array('type' => 'success'));
+            $this->redirect(array('action' => 'view'));
+        }
+    }
+    
+    /**
      * Create User, This function used with other Controllers
      * 
      * @param mixed $user , must contain this fields

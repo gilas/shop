@@ -1,6 +1,13 @@
 <?php
 
 class Coupon extends ShopAppModel {
+    
+    public $belongsTo = array(
+        'FactorHead' => array(
+            'className'     => 'Shop.FactorHead',
+            'foreignKey'    => 'factor_id',
+        ),
+    );
     public $namedType = array(
         1 => 'یکبار مصرف',
         2 => 'چندبار مصرف',

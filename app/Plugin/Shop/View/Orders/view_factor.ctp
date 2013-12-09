@@ -53,7 +53,14 @@ $this->Html->addCrumb('مشاهده فاکتور');
                     <th>قیمت واحد</th>
                     <th>مبلغ</th>
                 </tr>
-                <?php $index = 0; foreach($factor['Items'] as $item): ?>
+                <?php 
+                $index = 0; 
+                $totalTax = 0;
+                foreach($factor['Items'] as $item):
+                if(!empty($item['Stuff']['Tax']['percent'])){
+                    $totalTax += $item['total_price'] * $item['Stuff']['Tax']['percent'] / 100;
+                }
+                ?>
                 <tr>
                     <td><?php echo ++$index; ?></td>
                     <td><?php echo $item['Stuff']['name'] . ' ('.$item['Stuff']['code'].')'; ?></td>
@@ -68,15 +75,22 @@ $this->Html->addCrumb('مشاهده فاکتور');
                 </tr>
                 <tr>
                     <td colspan="4" style="text-align: left;">تخفیف کوپن</td>
-                    <td id="grid-align" dir="ltr"><?php echo '-' . number_format($factor['Coupon']['discount_value']); ?></td>
+                    <td id="grid-align" dir="ltr"><?php
+                        echo '- ';
+                        if($factor['Coupon']['discount_type'] == 1){
+                            echo number_format($factor['Coupon']['discount_value'] * $factor['FactorHead']['total_price'] / 100);
+                        } else{
+                            echo number_format($factor['Coupon']['discount_value']);
+                        } 
+                    ?></td>
                 </tr>
                 <tr>
                     <td colspan="4" style="text-align: left;">روش حمل کالا (<?php echo $factor['Deport']['name'] ?>)</td>
                     <td id="grid-align"><?php echo number_format($factor['Deport']['price']); ?></td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="text-align: left;">مالیات (<?php echo $factor['Tax']['percent'] ?> %)</td>
-                    <td id="grid-align"><?php echo number_format($factor['FactorHead']['final_price'] * $factor['Tax']['percent'] / 100); ?></td>
+                    <td colspan="4" style="text-align: left;">مالیات</td>
+                    <td id="grid-align"><?php echo number_format($totalTax); ?></td>
                 </tr>
                 <tr>
                     <td colspan="4" style="text-align: left;">جمع نهایی</td>

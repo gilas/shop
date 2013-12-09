@@ -12,8 +12,14 @@
 class UsersController extends AppController {
     
     // We won't use This actions, because we use Shop.User actions
-    //public $publicActions = array('login', 'logout','register');
+    public $publicActions = array(
+    	'admin_login',
+    	//'login', 
+    	'logout',
+    	//'register'
+    );
     
+	
     public $paginateConditions = array(
         'username' => array(
             'type' => 'LIKE',
@@ -101,6 +107,7 @@ class UsersController extends AppController {
     }
 
     public function admin_logout() {
+        $this->Session->delete('Cart'); //Delete Cart
         $this->Session->setFlash('شما با موفقیت از سیستم خارج شدید', 'message', array('type' => 'success'));
         $this->redirect($this->Auth->logout());
     }
@@ -242,6 +249,22 @@ class UsersController extends AppController {
             return false;
         }
         return $this->User->id ;
+    }
+    
+    public function _updateUser($user_id, $user = array()){
+        if(empty($user)){
+            return false;
+        }
+        if(strlen($user['password']) == 0){
+            unset($user['password']);
+        }else{
+            $user['password'] = $this->Auth->password($user['password']);
+        }
+        $this->User->id = $user_id;
+        if(! $this->User->save($user)){
+            return false;
+        }
+        return true ;
     }
     
     public function register(){

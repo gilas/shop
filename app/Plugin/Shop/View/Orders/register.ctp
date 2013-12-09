@@ -65,6 +65,12 @@ $this->Html->addCrumb('ثبت نام یا ورود کاربر');
         </div>
         <div class="row row-pad">
             <div class="span8">
+                <label>پست الکترونیک</label>
+                <input type="text" name="data[email]" />
+            </div>
+        </div>
+        <div class="row row-pad">
+            <div class="span8">
                 <label>نام کاربری</label>
                 <input type="text" name="data[username]" />
             </div>

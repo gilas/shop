@@ -3,7 +3,8 @@ $this->Html->addCrumb('اطلاعات کاربری');
 ?>
 <fieldset>
     <legend>اطلاعات کاربری</legend>
-    <table class="table table-list">
+    <?php echo $this->Html->link('ویرایش اطلاعات', array('action' => 'edit'), array('class' => 'btn btn-success')); ?>
+    <table class="table table-list" style="margin-top: 20px;">
         <tr>
             <th>نام و نام خانوادگی</th>
             <td><?php echo $user['User']['name']; ?></td>
@@ -23,6 +24,10 @@ $this->Html->addCrumb('اطلاعات کاربری');
         <tr>
             <th>آدرس</th>
             <td><?php echo $user['ShopUser']['address']; ?></td>
+        </tr>
+        <tr>
+            <th>پست الکترونیک</th>
+            <td><?php echo $user['User']['email']; ?></td>
         </tr>
     </table>
 </fieldset>

@@ -31,6 +31,7 @@ if(empty($stuffs)){
             <th>فی (ریال)</th>
             <th style="width: 130px;">تعداد</th>
             <th>مبلغ (ریال)</th>
+            <th>مالیات (ریال)</th>
             <th>حذف</th>
         </tr>
     </thead>
@@ -38,33 +39,38 @@ if(empty($stuffs)){
         <?php 
         $i = 0; 
         $total = 0;
-        foreach($stuffs as $stuff): 
-        $i++; 
-        ?>
-        <?php
-        $count = $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
-        $price = $stuff['Stuff']['price'];
-        if(!empty($stuff['Stuff']['discount'])){
-            $price = $stuff['Stuff']['PriceWithDiscount'];
+        $totalTax = 0;
+        foreach($stuffs as $stuff){
+            $i++;
+            $count = $this->Session->read('Cart.item.'. $stuff['Stuff']['id']);
+            $price = $stuff['Stuff']['price'];
+            if(!empty($stuff['Stuff']['discount'])){
+                $price = $stuff['Stuff']['PriceWithDiscount'];
+            }
+            $total += $price * $count;
+            echo '<tr>';
+                printf('<td>%s</td>', $i);
+                printf('<td>%s (%s)</td>', $stuff['Stuff']['name'], $stuff['Stuff']['code']);
+                printf('<td class="stuff-price">%s</td>', number_format($price));
+                printf('
+                <td style="text-align: center;">
+                    <input style="width:98px; margin:0;" class="stuff-count" type="text" name="stuff%s" rel="%s" value="%s" />
+                    <a class="btn btn-info changeCount"><i class="icon-arrow-left icon-white"></i></a>
+                </td>
+                ', microtime(), $stuff['Stuff']['id'], $count);
+                $t = $price * $count;
+                printf('<td class="stuff-total">%s</td>', number_format($t));
+                $totalTax += $tax = $stuff['Tax']['percent'] * $t / 100;
+                printf('<td class="stuff-tax"><span>%s</span><i style="display:none">%s</i></td>', number_format($tax), $stuff['Tax']['percent']);
+                printf('<td>%s</td>', $this->Form->postLink('حذف', array('controller' => 'Orders', 'action' => 'deleteFromCart', $stuff['Stuff']['id']), array('class' => 'btn btn-danger'), 'آیا مطمئن هستید؟'));
         }
-        $total += $price * $count;
         ?>
         <tr>
-            <td><?php echo $i ?></td>
-            <td><?php echo $stuff['Stuff']['name'] . ' (' . $stuff['Stuff']['code'] . ')'; ?></td>
-            <td class="stuff-price"><?php echo number_format($price); ?></td>
-            <td style="text-align: center;">
-                <input style="width:98px; margin:0;" class="stuff-count" type="text" name="stuff<?php echo microtime(); ?>" rel="<?php echo $stuff['Stuff']['id'] ?>" value="<?php echo $count; ?>" />
-                <a class="btn btn-info changeCount"><i class="icon-arrow-left icon-white"></i></a>
-            </td>
-            <td class="stuff-total"><?php echo number_format($price * $count); ?></td>
-            <td>
-            <?php
-            echo $this->Form->postLink('حذف', array('controller' => 'Orders', 'action' => 'deleteFromCart', $stuff['Stuff']['id']), array('class' => 'btn btn-danger'), 'آیا مطمئن هستید؟');
-            ?>
-            </td>
+            <td colspan="4" style="text-align: left;">جمع اقلام</td>
+            <td id="total-of-stuffs"><?php echo number_format($total); ?></td>
+            <td id="total-of-taxes"><?php echo number_format($totalTax); ?></td>
+            <td></td>
         </tr>
-        <?php endforeach; ?>
         <?php
         $coupon_text = '';
         $coupon_value = $this->Session->read('Cart.coupon.discount_value');
@@ -91,6 +97,7 @@ if(empty($stuffs)){
                 <a class="btn btn-info checkCoupon"><i class="icon-refresh icon-white"></i></a>
             </td>
             <td id="couponPrice" style="color: green;"><?php echo number_format($coupon_value); ?></td>
+            <td></td>
             <td>
             <?php
             echo $this->Form->postLink('حذف', array('controller' => 'Orders', 'action' => 'deleteCoupon'), array('class' => 'btn btn-danger'), 'آیا مطمئن هستید؟');
@@ -113,12 +120,14 @@ if(empty($stuffs)){
             </td>
             <td id="deportPrice"><?php echo number_format($this->Session->read('Cart.deport.price')); ?></td>
             <td></td>
+            <td></td>
         </tr>
     </tbody>
     <tfoot>
         <tr>
             <th colspan="4" style="text-align: left;">جمع کل (ریال)</th>
-            <th id="total"><?php echo $this->Html->price($total, false); ?></th>
+            <th id="total"><?php echo $this->Html->price($total + $totalTax, false); ?></th>
+            <th></th>
             <th></th>
         </tr>
     </tfoot>
@@ -129,6 +138,7 @@ if(empty($stuffs)){
         $('.stuff-count').change(function(){
             $(this).css('background-color', '#FFD6D6');
         })
+        
         $('.changeCount').click(function(){
             $count = $(this).parents('tr').find('.stuff-count');
             id = $count.attr('rel');
@@ -146,15 +156,9 @@ if(empty($stuffs)){
                 closeModal(); 
                 cnt = parseInt(data)
                 if(! isNaN(cnt)){
-                    price = removePrice($count.parents('tr').find('.stuff-price').text());
-                    $total = $count.parents('tr').find('.stuff-total');
-                    preTotal = removePrice($total.text());
-                    newTotal = parseInt(count) * parseInt(price);
-                    $total.text(getPrice(newTotal));
-                    total = removePrice($('#total').text());
-                    total = parseInt(total) - parseInt(preTotal) + newTotal;
-                    $('#total').text(getPrice(total));
+                    calStuff($count.parents('tr'));
                     calCoupon()
+                    calTotal()
                     alert("تعداد کالا ویرایش گردید.");
                     $count.css('background-color', '#D9FFD9');
                     return;
@@ -163,7 +167,39 @@ if(empty($stuffs)){
                 
             })
         })
-        
+        function calStuff($stuff){
+            count   = $stuff.find('.stuff-count').val();
+            price   = removePrice($stuff.find('.stuff-price').text());
+            $total  = $stuff.find('.stuff-total');
+            $tax    = $stuff.find('.stuff-tax span');
+            taxPercent    =  $stuff.find('.stuff-tax i').text();
+            total   = parseInt(count) * parseInt(price);
+            $total.text(getPrice(total));
+            if(taxPercent != ''){
+                tax = total * taxPercent / 100;
+                $tax.text(getPrice(tax));
+            }
+            calTotalStuffsAndTax();
+        }
+        function calTotalStuffsAndTax(){
+            total = 0;
+            $('.stuff-total').each(function(i, obj){
+                total += parseInt(removePrice($(obj).text()));
+            })
+            $('#total-of-stuffs').text(getPrice(total));
+            tax = 0;
+             $('.stuff-tax span').each(function(i, obj){
+                tax += parseInt(removePrice($(obj).text()));
+            })
+            $('#total-of-taxes').text(getPrice(tax));
+        }
+        function calTotal(){
+            total  = parseInt(removePrice($('#total-of-stuffs').text()));
+            tax    = parseInt(removePrice($('#total-of-taxes').text()));
+            coupon = parseInt(removePrice($('#couponPrice').text()));
+            deport = parseInt(removePrice($('#deportPrice').text()));
+            $('#total').text(getPrice(total + tax - coupon + deport));
+        }
         $('#setDeport').click(function(){
             val = $('#deportOption').val();
             price = 0;
@@ -185,11 +221,8 @@ if(empty($stuffs)){
                 if(data){
                     alert("روش ارسال کالا تنظیم گردید.");
                     $('#deportOption').css('background-color', '#D9FFD9');
-                    prePrice = removePrice($('#deportPrice').text());
                     $('#deportPrice').text(getPrice(price));
-                    total = removePrice($('#total').text());
-                    total = parseInt(total) - parseInt(prePrice) + parseInt(price);
-                    $('#total').text(getPrice(total));
+                    calTotal();
                     return;
                 }
                 alertError(data);
@@ -231,20 +264,20 @@ if(empty($stuffs)){
             if(type == undefined){
                 type = parseInt($('#couponValue span').text())
                 couponPrice = parseInt(removePrice($('#couponValue i').text()))
+                if(isNaN(type)){
+                    return false;
+                }
             }
             value = couponPrice;
-            prePrice = parseInt(removePrice($('#couponPrice').text()));
-            deportPrice = parseInt(removePrice($('#deportPrice').text()));
-            total = parseInt(removePrice($('#total').text()));
+            total = parseInt(removePrice($('#total-of-stuffs').text()));
             if(type == 1){
-                couponPrice = (total + prePrice - deportPrice) * couponPrice / 100;
+                couponPrice = total  * couponPrice / 100;
                 $('#couponValue').html('کوپن (<i>' + value + '</i> %)<span style="display: none;">1</span>')
             }else{
                 $('#couponValue').html('کوپن (<i>' + couponPrice + '</i> ریال)<span style="display: none;">1</span>')
             }
             $('#couponPrice').text(getPrice(couponPrice));
-            total = parseInt(total) + parseInt(prePrice) - parseInt(couponPrice);
-            $('#total').text(getPrice(total));
+            calTotal();
         }
     })
 </script>

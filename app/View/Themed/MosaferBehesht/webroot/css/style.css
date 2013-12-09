@@ -421,50 +421,14 @@ button::-moz-focus-inner,input::-moz-focus-inner{
 button:hover,button:active{
 	box-shadow:inset 0 0 1px 0 rgba(255,255,255,0.42)
 }
-button,input[type="submit"],input[type="reset"]{
-	height:25px;
-	line-height:25px;
-	width:auto;
-	padding:0 10px;
-	border:1px solid #c7c7c7;
-	background:url(../img/theme/buttons/normal/bg.png);
-	border-radius:5px;
-	-moz-background-clip:padding;
-	-webkit-background-clip:padding-box;
-	background-clip:padding-box;
-	-webkit-box-shadow:0 1px 1px 0 rgba(18,16,11,0.1)!important;
-	-moz-box-shadow:0 1px 1px 0 rgba(18,16,11,0.1)!important;
-	box-shadow:0 1px 1px 0 rgba(18,16,11,0.1)!important
-}
 .button-wrap{
 	border-radius:5px;
 	overflow:hidden
-}
-button:hover,button:active,input[type="submit"]:hover,input[type="submit"]:active,input[type="reset"]:hover,input[type="reset"]:active,.customfile-hover button{
-	border-color:#2462a0;
-	background:url(../img/theme/buttons/hover/bg.png) 0 0;
-    
-	-webkit-box-shadow:0 1px 1px 0 rgba(18,16,11,0.1),inset 0 0 1px 0 rgba(255,255,255,0.42);
-	-moz-box-shadow:0 1px 1px 0 rgba(18,16,11,0.1),inset 0 0 1px 0 rgba(255,255,255,0.42);
-	box-shadow:0 1px 1px 0 rgba(18,16,11,0.1),inset 0 0 1px 0 rgba(255,255,255,0.42)
-}
-button:active,input[type="submit"]:active,.customfile-focus button{
-	background:url(../img/theme/buttons/active/bg.png)
 }
 a.btn{
 	height:23px;
     padding: 4px 5px !important;
     font-size: 12px;
-}
-button.red,input[type="reset"],a.button.red,a.btn.red{
-	color:#952a2a
-}
-button:hover.red,button:active.red,input[type="reset"]:hover,input[type="reset"]:active{
-	border-color:#870d0d;
-	background-image:url(../img/theme/buttons/hover/bg-red.png)
-}
-button:active.red,input[type="reset"]:active{
-	background:url(../img/theme/buttons/active/bg-red.png)
 }
 
 .btn {

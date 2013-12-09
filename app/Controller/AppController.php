@@ -95,6 +95,12 @@ class AppController extends Controller {
         // Redirect to Shop
         $this->Auth->loginAction =    array('plugin' => 'Shop','controller' => 'User','action' => 'login');
         $this->Auth->logoutRedirect = array('plugin' => 'Shop','controller' => 'User','action' => 'login');
+		
+		if ($this->request['prefix']) {
+            $this->Auth->loginAction =    array('admin' => true, 'plugin' => false,'controller' => 'Users','action' => 'login');
+        	$this->Auth->logoutRedirect = array('admin' => true, 'plugin' => false,'controller' => 'Users','action' => 'login');
+        }
+		
         $this->Auth->authenticate =   array(
             // Login Only actived users
             AuthComponent::ALL => array('scope' => array('User.active' => true)),

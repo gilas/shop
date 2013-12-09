@@ -65,7 +65,7 @@ if (!empty($coupons)){
             echo $this->Html->tag('td', Jalali::niceShort($coupon['Coupon']['used_date']));
             $factorLink = null;
             if(!empty($coupon['Coupon']['factor_id'])){
-                $factorLink = $this->Html->link('کد '.$coupon['Coupon']['factor_id'],array('controller' => 'Orders', 'action' => 'details', $coupon['Coupon']['factor_id'])) ;
+                $factorLink = $this->Html->link('سفارش '.$coupon['FactorHead']['number'],array('controller' => 'Orders', 'action' => 'details', $coupon['Coupon']['factor_id'])) ;
             }
             echo $this->Html->tag('td', $factorLink);
             echo $this->Html->tag('td', $coupon['Coupon']['formattedStatus']);
