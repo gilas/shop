@@ -38,3 +38,41 @@
     color:green;
     padding-left:10px;
 }
+.gallery-item{
+	float:left;
+	background-color: #DEEEFF;
+    display: inline-block;
+    margin: 0 10px 10px 0;
+    padding: 5px;
+}
+.gallery{
+	display: inline-block;
+    margin-top: 23px;
+}
+.close{
+	font-family:"Helvetica Neue",​Helvetica,​Arial,​sans-serif;
+}
+.gallery-item .close{
+	display: block;
+	position: absolute;
+}
+#gallery-highlight{
+    background-color: #000;
+    opacity: 0.5;
+    width: 180px;
+    height: 120px;
+    display: table;
+    position: absolute;
+    display: none;
+    cursor: pointer;
+}
+#gallery-highlight .icon-trash{
+    position: relative;
+    right: 69px;
+    top: 53px;   
+}
+#gallery-highlight .icon-picture{
+    position: relative;
+    right: 83px;
+    top: 53px;   
+}

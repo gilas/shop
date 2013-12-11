@@ -58,7 +58,18 @@ class StuffsController extends ShopAppController {
         if ($this->request->is('post')) {
             $this->Stuff->create();
             if ($this->Stuff->save($this->request->data)) {
-                
+                if(!empty($this->request->data['gallery'])){
+                    foreach($this->request->data['gallery'] as $gallery){
+                        $g = array(
+                            'stuff_id' => $this->Stuff->id,
+                            'desc' => '',
+                            'image' => $gallery,
+                            'published' => true,
+                        );
+                        $this->Stuff->Gallery->create();
+                        $this->Stuff->Gallery->save($g);
+                    }
+                }
                 $this->Session->setFlash('کالا با موفقیت ایجاد شد', 'message', array('type' => 'success'));
                 $this->redirect(array('action' => 'index', 'admin' => TRUE));
             } else {
@@ -93,6 +104,18 @@ class StuffsController extends ShopAppController {
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->Stuff->save($this->request->data)) {
+                if(!empty($this->request->data['gallery'])){
+                    foreach($this->request->data['gallery'] as $gallery){
+                        $g = array(
+                            'stuff_id' => $this->Stuff->id,
+                            'desc' => '',
+                            'image' => $gallery,
+                            'published' => true,
+                        );
+                        $this->Stuff->Gallery->create();
+                        $this->Stuff->Gallery->save($g);
+                    }
+                }
                 $this->Session->setFlash('کالا با موفقیت ویرایش شد', 'message', array('type' => 'success'));
                 $this->redirect(array('action' => 'index', 'admin' => TRUE));
             } else {
@@ -157,6 +180,18 @@ class StuffsController extends ShopAppController {
         $this->_changeStatus('Stuff', 'published', 0, 'کالا با موفقیت از حالت انتشار خارج شد.');
         $this->redirect($this->referer());
     }
+	
+	public function admin_removeGallery(){
+		$this->autoRender = false;
+		if(! $this->request->is('post')){
+			return SettingsController::read('Error.Code-12');
+		}
+		$this->Stuff->Gallery->id = $this->request->data('id');
+		if(! $this->Stuff->Gallery->delete()){
+			return 'اشکال در حذف تصویر';
+		}
+		return true;
+	}
     
     public function _getInfo($code){
         $stuffs = $this->Stuff->find('all', array('conditions' => array('code' => $code), 'contain' => false));

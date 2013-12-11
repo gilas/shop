@@ -97,11 +97,28 @@ echo $this->Form->create('Stuff', array(
 <div class="tab-pane" id="gallery">
     <div class="row row-pad">
         <div class="span4">
-            <?php //TODO: Upload Gallery image ?>
-            <a class="btn btn-primary"><i class="icon-upload icon-white"></i></a>
+            <input type="file" name="data[gallery][]" multiple="multiple" />
+            
         </div>
     </div>
-    <div id="galleryList"></div>
+    <?php 
+    if($this->request->data('Gallery')){
+        $this->Html->script('fancybox', false);
+        $this->Html->css('fancybox', null, array('inline' => false));
+        echo '<div id="galleryList">';
+        foreach($this->request->data('Gallery') as $i => $gallery){
+        	echo '<div class="gallery-item" rel='. $gallery['id'] .'>';
+				echo '<i class="close" href="#">&times;</i>';
+	            echo $this->Html->link(
+	                $this->Upload->image($gallery, 'image', array('style' => 'thumb', 'model' => 'Gallery')), 
+	                $this->Upload->url($gallery, 'image', array('urlize' => false, 'model' => 'Gallery')), 
+	                array('escape' => false,'class' => 'gallery','rel' => 'gallery', 'i' => $gallery['id'], 'title' => $gallery['desc'] )
+	            );
+			echo '</div>';
+        }   
+        echo '</div>'; 
+    } 
+    ?>
 </div>
 </div>
 <?php
@@ -123,5 +140,29 @@ echo $this->Form->end();
             }
         })
         $('#StuffType').trigger('change');
+        <?php if($this->request->data('Gallery')): ?>
+        $("a[rel=gallery]").fancybox({
+			'transitionIn'	: 'elastic',
+			'transitionOut'	: 'elastic'
+		});
+		$('.gallery-item .close').click(function(){
+			$parent = $(this).parent();
+			$.ajax({
+                url:"<?php echo $this->Html->url(array('controller' => 'Stuffs', 'action' => 'removeGallery')) ?>", 
+                type:'POST',
+                data:'id=' + $parent.attr('rel')
+            })
+            .done(function(data) { 
+                if(data){
+                    $parent.fadeOut(function(){
+						$parent.remove()
+					})
+                    return;
+                }
+                alertError(data);
+                
+            })
+		})
+		<?php endif; ?>
     })
 </script>

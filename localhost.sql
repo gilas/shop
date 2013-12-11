@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 09, 2013 at 04:59 AM
+-- Generation Time: Dec 11, 2013 at 04:59 AM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -1814,7 +1814,7 @@ CREATE TABLE IF NOT EXISTS `gl_users` (
 INSERT INTO `gl_users` (`id`, `username`, `password`, `name`, `email`, `active`, `role_id`, `registered_date`, `last_logged_in`, `last_ip_logged_in`) VALUES
 (1, 'admin', '9ee2c9367485427679bd7a0ec1c7f3263869b387', 'جمال طوسی', 'jamal4533@yahoo.com', 1, 3, '0000-00-00 00:00:00', '1392-03-20 13:17:07', '127.0.0.1'),
 (2, 'hamid', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'حمید ممدوحی', 'hamid.mamdoohi@gmail.com', 1, 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '127.0.0.1'),
-(3, 'razzaghi', '6017b1c16ab39a4f14f2a579fa9aa629936c78b6', 'محمد رزاقی', '1razzaghi@gmail.com', 1, 2, '0000-00-00 00:00:00', '1392-09-17 22:31:02', '127.0.0.1'),
+(3, 'razzaghi', '6017b1c16ab39a4f14f2a579fa9aa629936c78b6', 'محمد رزاقی', '1razzaghi@gmail.com', 1, 2, '0000-00-00 00:00:00', '1392-09-19 22:25:14', '127.0.0.1'),
 (15, '0945981961', 'daf0b857884e8f26b40e14ced40ebd29039503ed', 'مصطفی مهتر', 'mostafa.mehtar@gmail.com', 1, 3, '1391-11-15 16:39:02', '1391-11-30 10:20:12', '127.0.0.1'),
 (16, 'hamid1', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'hamid', NULL, 0, 2, '1392-07-25 12:12:08', '0000-00-00 00:00:00', ''),
 (17, 'hamid2', 'ddd20c26354abe5caefbdce42621716d09dcbe3f', 'hamid', NULL, 1, 2, '1392-07-25 12:13:12', '0000-00-00 00:00:00', ''),
@@ -2117,7 +2117,17 @@ CREATE TABLE IF NOT EXISTS `shop_galleries` (
   `published` int(1) DEFAULT NULL,
   `created` varchar(19) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `shop_galleries`
+--
+
+INSERT INTO `shop_galleries` (`id`, `stuff_id`, `desc`, `image_file_name`, `published`, `created`) VALUES
+(1, 5, '', 'Blinds.jpg', 1, '1392-09-19 22:37:37'),
+(2, 5, '', 'BlueMarbleWest.jpg', 1, '1392-09-19 22:37:37'),
+(3, 5, '', 'bright_day.jpg', 1, '1392-09-19 22:37:38'),
+(4, 5, '', 'Chmiri.jpg', 1, '1392-09-19 22:37:39');
 
 -- --------------------------------------------------------
 
@@ -2201,7 +2211,7 @@ CREATE TABLE IF NOT EXISTS `shop_stuffs` (
   `created` varchar(19) DEFAULT NULL,
   `modified` varchar(19) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `shop_stuffs`
@@ -2210,7 +2220,8 @@ CREATE TABLE IF NOT EXISTS `shop_stuffs` (
 INSERT INTO `shop_stuffs` (`id`, `code`, `name`, `category_id`, `thumbnail_file_name`, `count`, `price`, `discount`, `type`, `weight`, `dimension`, `download_file_file_name`, `deport_id`, `tax_id`, `attachments_file_name`, `published`, `order`, `desc`, `created`, `modified`) VALUES
 (2, 'C12354', 'sd', 3, '32_copy.jpg', 988, 200000, NULL, 1, NULL, '', NULL, 0, 0, NULL, 1, 1, '<p>jhjhjhds</p>', '1392-07-20 06:19:54', '1392-07-27 03:59:06'),
 (3, '1247', 'ماکارونی', 2, NULL, 838, 12000, NULL, 1, NULL, '', NULL, 0, 0, NULL, 1, 1, '', '1392-07-21 11:49:15', '1392-07-26 22:20:42'),
-(4, '10056', 'برلیان', 6, 'Hamid_Picture.jpg', 3, 150000, 5, 1, 500, '10×20×30', NULL, 1, 1, 'DSC00062.JPG', 1, 1, '', '1392-09-01 12:02:02', '1392-09-01 16:09:16');
+(4, '10056', 'برلیان', 6, 'Hamid_Picture.jpg', 3, 150000, 5, 1, 500, '10×20×30', NULL, 1, 1, 'DSC00062.JPG', 1, 1, '', '1392-09-01 12:02:02', '1392-09-01 16:09:16'),
+(5, '345', '23', 5, NULL, 10, 2000000, NULL, 1, NULL, '', NULL, 0, 0, NULL, 1, 1, '', '1392-09-19 22:37:36', '1392-09-19 22:37:36');
 
 -- --------------------------------------------------------
 

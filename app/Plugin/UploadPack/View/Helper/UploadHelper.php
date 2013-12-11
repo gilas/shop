@@ -29,7 +29,13 @@ class UploadHelper extends AppHelper {
     public function url($data, $field, $options = array())
     {
         $options += array('style' => 'original', 'urlize' => true);
-        list($model, $field) = explode('.', $field);
+        if(strpos($field, '.') !== false){
+            list($model, $field) = explode('.', $field);
+        }else{
+            $model = $options['model'];
+            unset($options['model']);
+        }
+            
         if(is_array($data))
         {
             if(isset($data[$model]))
