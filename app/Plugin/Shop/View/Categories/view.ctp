@@ -8,7 +8,7 @@ if(!empty($categoryParents)){
 $this->Html->addCrumb($category['Category']['name']);
 ?>
 <?php if(!empty($categoryChildren)): ?>
-<h6 class="page-header">زیر مجموعه ها</h6>
+<h2 class="page-header">زیر مجموعه ها</h2>
 <div class="categories">
     <?php
     foreach($categoryChildren as $child){
@@ -18,7 +18,7 @@ $this->Html->addCrumb($category['Category']['name']);
 </div>
 <?php endif; ?>
 
-<h6 class="page-header">کالا های مرتبط</h6>
+<h2 class="page-header">کالا های مرتبط</h2>
 <?php
 if(empty($stuffs)){
     echo 'هیچ کالایی یافت نشد';
@@ -30,4 +30,3 @@ if(empty($stuffs)){
         <?php  echo $this->Html->link($stuff['Stuff']['name'], array('controller' => 'Stuffs', 'action' => 'view', $stuff['Stuff']['id']), array('class' => 'stuff')); ?>
     <?php endforeach; ?>
 </div>
-<?php echo $this->Filter->limitAndPaginate();  ?>

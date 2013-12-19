@@ -14,7 +14,7 @@ $this->Html->addCrumb('مشاهده فاکتور');
         <?php endif; ?>
         <li>
             <?php 
-            echo $this->Form->postLink('<i class="icon-print icon-white"></i> پرینت فاکتور', array('controller' => 'Orders', 'action' => 'emptyCart'), array('class' => 'btn btn-info', 'escape' => false));
+            echo $this->Form->postLink('<i class="icon-print icon-white"></i> پرینت فاکتور', '#', array('class' => 'btn btn-info', 'escape' => false));
             ?>
         </li>
     </ul>

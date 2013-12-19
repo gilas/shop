@@ -1,0 +1,98 @@
+body { background: #f2f2f2 url(../img/background/mosaic1/bg.jpg) center top no-repeat; }
+
+/* Primary colors */
+#footer 					{ color: #666; }
+#footer a				{ color: #333; }
+#footer a:hover			{ color: #000; }
+#footer * 				{ border-top-color: #b9b9b9; }
+
+/* Meta colors */
+#footer .meta 			{ color: #999; } 
+#footer .meta a 			{ color: #666; } 
+#footer .meta a:hover 	{ color: #333; }
+
+#subfooter { background-image: url(../img/foreground/blue/dividers.png); }
+
+#footer .c-12 .frame span.helper1, 
+#footer .frame.u-12 span.helper1, 
+#footer .c-12 .frame span.helper2, 
+#footer .frame.u-12 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-12.png); 
+}
+
+#footer .c-11 .frame span.helper1, 
+#footer .frame.u-11 span.helper1, 
+#footer .c-11 .frame span.helper2, 
+#footer .frame.u-11 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-11.png); 
+}
+
+#footer .c-10 .frame span.helper1, 
+#footer .frame.u-10 span.helper1, 
+#footer .c-10 .frame span.helper2, 
+#footer .frame.u-10 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-10.png); 
+}
+
+#footer .c-9 .frame span.helper1, 
+#footer .frame.u-9 span.helper1, 
+#footer .c-9 .frame span.helper2, 
+#footer .frame.u-9 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-9.png); 
+}
+
+#footer .c-8 .frame span.helper1, 
+#footer .frame.u-8 span.helper1, 
+#footer .c-8 .frame span.helper2, 
+#footer .frame.u-8 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-8.png); 
+}
+
+#footer .c-7 .frame span.helper1, 
+#footer .frame.u-7 span.helper1, 
+#footer .c-7 .frame span.helper2, 
+#footer .frame.u-7 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-7.png); 
+}
+
+#footer .c-6 .frame span.helper1, 
+#footer .frame.u-6 span.helper1, 
+#footer .c-6 .frame span.helper2, 
+#footer .frame.u-6 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-6.png); 
+}
+
+#footer .c-5 .frame span.helper1, 
+#footer .frame.u-5 span.helper1, 
+#footer .c-5 .frame span.helper2, 
+#footer .frame.u-5 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-5.png); 
+}
+
+#footer .c-4 .frame span.helper1, 
+#footer .frame.u-4 span.helper1, 
+#footer .c-4 .frame span.helper2, 
+#footer .frame.u-4 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-4.png); 
+}
+
+#footer .c-3 .frame span.helper1, 
+#footer .frame.u-3 span.helper1, 
+#footer .c-3 .frame span.helper2, 
+#footer .frame.u-3 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-3.png); 
+}
+
+#footer .c-2 .frame span.helper1, 
+#footer .frame.u-2 span.helper1, 
+#footer .c-2 .frame span.helper2, 
+#footer .frame.u-2 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-2.png); 
+}
+
+#footer .c-1 .frame span.helper1, 
+#footer .frame.u-1 span.helper1, 
+#footer .c-1 .frame span.helper2, 
+#footer .frame.u-1 span.helper2 { 
+	background-image: url(../img/background/mosaic1/fancy-1.png); 
+}

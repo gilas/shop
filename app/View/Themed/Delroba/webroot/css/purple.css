@@ -1,0 +1,263 @@
+/* ============================================================================================= */
+/* =====>>> GLOBAL LAYOUT <<<=================================================================== */
+/* ============================================================================================= */
+
+
+/* ----->>> BODY SECTION <<<-------------------------------------------------------------------- */
+
+/* Primary colors */
+body 		{ color: #666; }
+a 			{ color: #a20098; }
+a:hover 		{ color: #ff7200; }
+body * 		{ border-color: #e8e8e8; }
+
+/* Meta colors */
+.meta 			{ color: #b3b3b3; } 
+.meta a 			{ color: #666; } 
+.meta a:hover 	{ color: #000; }
+
+
+code { background-color: #e8e8e8; border-color: #aaa; }
+
+th { 
+	border-color: #eee; 
+	background: #eee; 
+	background: -moz-linear-gradient(top, white, #eee);  
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#eee)); 
+} 
+tr.even td { background-color: #eee; }
+
+input, select, textarea { 
+	background-color: #eee; 
+	border-color: #999 #ccc #ccc #999; 
+	background: -moz-linear-gradient(top, #eee, #fff); 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#fff)); 
+}
+
+/* --- Additional list styles --- */
+ul.checklist li { background-image: url(../img/foreground/purple/bullet-checklist.png); background-position: right center;}
+
+/* --- Buttons --- */
+.button { background-image: url(../img/foreground/purple/buttons.png); }
+  .button span { background-image: url(../img/foreground/purple/buttons2.png); }
+
+.active.button 		{ color: #fff; }  
+.tertiary.button 	{ color: #666; }  
+.secondary.button 	{ color: #333; }
+.primary.button 		{ color: #fff; }  
+.button:hover 		{ color: #fff; } 
+
+/* --- Dividers ---*/
+.divider { background-image: url(../img/foreground/purple/dividers.png); }
+
+/* --- Fancy frames --- */
+.c-12 .frame span.helper1, 
+.frame.u-12 span.helper1, 
+.c-12 .frame span.helper2, 
+.frame.u-12 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-12.png); 
+}
+
+.c-11 .frame span.helper1, 
+.frame.u-11 span.helper1, 
+.c-11 .frame span.helper2, 
+.frame.u-11 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-11.png); 
+}
+
+.c-10 .frame span.helper1, 
+.frame.u-10 span.helper1, 
+.c-10 .frame span.helper2, 
+.frame.u-10 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-10.png); 
+}
+
+.c-9 .frame span.helper1, 
+.frame.u-9 span.helper1, 
+.c-9 .frame span.helper2, 
+.frame.u-9 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-9.png); 
+}
+
+.c-8 .frame span.helper1, 
+.frame.u-8 span.helper1, 
+.c-8 .frame span.helper2, 
+.frame.u-8 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-8.png); 
+}
+
+.c-7 .frame span.helper1, 
+.frame.u-7 span.helper1, 
+.c-7 .frame span.helper2, 
+.frame.u-7 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-7.png); 
+}
+
+.c-6 .frame span.helper1, 
+.frame.u-6 span.helper1, 
+.c-6 .frame span.helper2, 
+.frame.u-6 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-6.png); 
+}
+
+.c-5 .frame span.helper1, 
+.frame.u-5 span.helper1, 
+.c-5 .frame span.helper2, 
+.frame.u-5 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-5.png); 
+}
+
+.c-4 .frame span.helper1, 
+.frame.u-4 span.helper1, 
+.c-4 .frame span.helper2, 
+.frame.u-4 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-4.png); 
+}
+
+.c-3 .frame span.helper1, 
+.frame.u-3 span.helper1, 
+.c-3 .frame span.helper2, 
+.frame.u-3 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-3.png); 
+}
+
+.c-2 .frame span.helper1, 
+.frame.u-2 span.helper1, 
+.c-2 .frame span.helper2, 
+.frame.u-2 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-2.png); 
+}
+
+.c-1 .frame span.helper1, 
+.frame.u-1 span.helper1, 
+.c-1 .frame span.helper2, 
+.frame.u-1 span.helper2 { 
+	background-image: url(../img/foreground/purple/fancy-1.png); 
+}
+
+/* --- System messages --- */
+.message.success 	{ background-color: #cffebf; color: #005826; border-color: #8fe573; }
+.message.info 		{ background-color: #bfebfe; color: #000058; border-color: #73c0e6; }
+.message.warning 	{ background-color: #fcfebf; color: #502800; border-color: #e5d973; }
+.message.error 		{ background-color: #ffdfdf; color: #bf0000; border-color: #ffa5a5; }  
+
+/* --- Text highlighting --- */
+span.mark { background-color: #fff000; }
+
+/* --- Dropcaps --- */
+span.dropcap { background-image: url(../img/foreground/purple/dropcap.png); color: #fff; }
+
+
+/* ----->>> HEADER SECTION <<<------------------------------------------------------------------ */
+
+/* --- Primary navigation */
+#primary-nav .helper1, #primary-nav .helper2 { 
+	background-image: url(../img/foreground/purple/main-navigation.png); 
+}
+
+.dd-menu { background: url(../img/foreground/purple/main-navigation.png) -30px 0 no-repeat; }
+  
+.dd-menu > li > a { color: #fff; }  
+.dd-menu > li > a:hover, 
+.dd-menu > li.current-menu-item > a,
+.dd-menu > li.current-menu-ancestor > a,
+.dd-menu > li.current_page_parent > a, 
+.dd-menu > li > a.dd-path { 
+	background: url(../img/foreground/purple/main-navigation.png) -30px -34px no-repeat; 	
+	color: #fff;
+}
+  
+.dd-menu li ul li a, .dd-menu li.current-menu-item ul li a { 
+	background: #eee url(../img/dd-submenu.png) no-repeat; 
+	color: #666;
+    text-align: right; 
+}
+
+.dd-menu li ul li a:hover, .dd-menu li.current-menu-item ul li a:hover, .dd-menu li ul li a.dd-path { 
+	background: #8d00c4 none; 
+	color: #fff; 
+	background: -moz-linear-gradient(top, #8d00c4, #b52feb); 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#8d00c4), to(#b52feb)); 
+}
+
+.dd-menu a span.dd-arrow { background-image: url(../img/foreground/purple/arrow-down.png); }
+.dd-menu ul a span.dd-arrow { background-image: url(../img/foreground/purple/arrow-right.png); }
+
+
+/* ----->>> CONTENT SECTION <<<----------------------------------------------------------------- */
+#content .hd { background: url(../img/foreground/purple/content-hd.png) no-repeat; }
+  #content .hd h1 { color: #fff; }
+
+/* --- Breadcrumbs --- */
+.breadcrumbs 			{ color: #b680b3; }
+.breadcrumbs a 			{ color: #ffcb68; }
+.breadcrumbs a:hover 	{ color: #fcff00; }
+
+	
+#content .bd { 
+	background-color: #fff; 
+	background-image: url(../img/foreground/purple/dividers.png); 
+}
+
+
+#content .ft .shadow { 
+	background-color: #fff; 
+	background-image: url(../img/foreground/purple/dividers.png); 
+}
+#content .ft .wrapper { background-color: #fff; }
+#content .ft .helper1 { background-image: url(../img/foreground/purple/content-bottom-bg.png); }
+  
+#content .ft.special .shadow { background-color: #e6e6e6; }
+#content .ft.special .wrapper { 
+	background-color: #e6e6e6; 
+	border-color: #e6e6e6; 	
+}
+#content .ft.special .helper1 { 
+	background-image: url(../img/foreground/purple/content-bottom-alt-bg.png); 
+}
+
+
+/* ============================================================================================= */
+/* =====>>> PAGE SPECIFIC LAYOUT <<<============================================================ */
+/* ============================================================================================= */ 
+    
+/* ----->>> HOME <<<---------------------------------------------------------------------------- */ 
+
+/* --- Slider --- */
+
+
+#slider .slides img { background: url(../img/preloader.gif) center center no-repeat; }
+
+#slider.slider-coin .slides { background-color: #6d0066; }
+#slider.slider-coin, 
+#slider.slider-coin .slide .image a span.helper1, 
+#slider.slider-coin .slide .image a span.helper2 { 
+	background-image: url(../img/foreground/purple/slider-simple.png); 
+}
+#slider.slider-coin .nav li a.coin { 
+	background-image: url(../img/foreground/purple/slider-navigation.png); 
+}
+
+#slider.slider-thumb .slides { background-color: #6d0066; background-image: url(../img/blocker.png); }
+#slider.slider-thumb, 
+#slider.slider-thumb .slide .image a span.helper1,
+#slider.slider-thumb .slide .non-image span.helper1 { 
+	background-image: url(../img/foreground/purple/slider-advanced.png); 
+}     
+
+#slider.slider-thumb .slide .non-image h2 { color: #fff; }
+
+
+/* ----->>> PORTFOLIO <<<----------------------------------------------------------------------- */ 
+
+/* --- Single project from portfolio --- */
+.folio-single , 
+.folio-single .slide span.helper1, 
+.folio-single .slide span.helper2 { 
+	background-image: url(../img/foreground/purple/slider-advanced.png); 
+}
+
+/* ----->>> 404 <<<----------------------------------------------------------------------------- */ 	
+#error404 { background-image: url(../img/foreground/purple/content-hd.png); color: #fff; }
+  #error404 a { color: #ffcb68; }
+  #error404 a:hover { color: #fcff00; }

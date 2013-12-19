@@ -9,7 +9,7 @@ if(empty($stuff)){
 }
 $this->Html->addCrumb($stuff['Stuff']['name']);
 ?>
-<h6 class="page-header">مشخصات کالا</h6>
+<h2 class="page-header">مشخصات کالا</h2>
 <div class="stuff" style="display: block;">
     <table class="stuff-detail">
         <tr>

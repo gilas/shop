@@ -324,7 +324,9 @@ class OrdersController extends ShopAppController {
 		$items = $this->Session->read('Cart.item');
 		if(empty($items)){
             $this->Session->setFlash('سبد خرید خالی می باشد.', 'message', array('type' => 'error'));
-            $this->redirect($this->referer());
+            // Defend from loop redirection
+            if($this->action != 'viewCart')
+                $this->redirect($this->referer());
         }
         $stuffs = array();
         if($items){

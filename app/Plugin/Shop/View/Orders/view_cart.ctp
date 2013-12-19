@@ -54,7 +54,7 @@ if(empty($stuffs)){
                 printf('<td class="stuff-price">%s</td>', number_format($price));
                 printf('
                 <td style="text-align: center;">
-                    <input style="width:98px; margin:0;" class="stuff-count" type="text" name="stuff%s" rel="%s" value="%s" />
+                    <input style="width:66px; margin:0;" class="stuff-count" type="text" name="stuff%s" rel="%s" value="%s" />
                     <a class="btn btn-info changeCount"><i class="icon-arrow-left icon-white"></i></a>
                 </td>
                 ', microtime(), $stuff['Stuff']['id'], $count);
@@ -93,7 +93,7 @@ if(empty($stuffs)){
         <tr>
             <td colspan="3" style="text-align: left;" id="couponValue">کوپن <?php echo $coupon_text; ?><span style="display: none;"><?php echo $this->Session->read('Cart.coupon.discount_type'); ?></span></td>
             <td style="text-align: center;">
-                <input style="width:98px; margin:0;" id="coupon-number" type="text" name="coupon<?php echo microtime(); ?>" value="<?php echo $this->Session->read('Cart.coupon.serial'); ?>" />
+                <input style="width:66px; margin:0;" id="coupon-number" type="text" name="coupon<?php echo microtime(); ?>" value="<?php echo $this->Session->read('Cart.coupon.serial'); ?>" />
                 <a class="btn btn-info checkCoupon"><i class="icon-refresh icon-white"></i></a>
             </td>
             <td id="couponPrice" style="color: green;"><?php echo number_format($coupon_value); ?></td>
@@ -110,7 +110,7 @@ if(empty($stuffs)){
         <tr>
             <td colspan="3" style="text-align: left;">روش ارسال</td>
             <td>
-                <select id="deportOption" style="width: 98px;">
+                <select id="deportOption" style="width: 83px;">
                     <option price="0" value="0"></option>
                     <?php foreach($deports as $deport): ?>
                     <option <?php if($deport['Deport']['id'] == $this->Session->read('Cart.deport.id')){echo 'selected="selected"';} ?> price="<?php echo $deport['Deport']['price'] ?>" value="<?php echo $deport['Deport']['id'] ?>"><?php echo $deport['Deport']['name'] ?></option>
