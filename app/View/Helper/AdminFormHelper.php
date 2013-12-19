@@ -184,7 +184,11 @@ class AdminFormHelper extends AppHelper{
  * 
  * @return 'form' tag
  */
-    public function startFormTag($model = null){
+    public function startFormTag($model = null, $options = array()){
+    	if(!empty($options['manual'])){
+    		// Use This when we have another controller without model
+    		return '<form accept-charset="utf-8" method="post" id="adminForm" action="'.Router::url(array('controller' => $model, 'action' => 'dispatch' )).'">';
+    	}
         return $this->Form->create($model,array('action' => 'dispatch','id' => 'adminForm'));
     }
     

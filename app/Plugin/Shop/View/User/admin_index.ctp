@@ -10,9 +10,9 @@ $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-
   
 $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-check icon-white')),'',array('class' => 'btn btn-info','escape' => false,'isParent' => 'publish', 'rel' => 'tooltip','data-original-title' => 'انتشار','tooltip-place' => 'top'));
     // Publish
-    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-ok')). ' فعال',array('action' => 'publish'),array('escape' => false, 'parent' => 'publish'));
+    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-ok')). ' فعال',array('action' => 'active'),array('escape' => false, 'parent' => 'publish'));
     // unPublish
-    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-remove')).' غیرفعال',array('action' => 'unPublish'),array('escape' => false, 'parent' => 'publish'));
+    $this->AdminForm->addToolbarItem($this->Html->tag('i','',array('class' => 'icon-remove')).' غیرفعال',array('action' => 'inactive'),array('escape' => false, 'parent' => 'publish'));
 //Show toolbar
 $this->AdminForm->showToolbar($title);
 
@@ -26,7 +26,7 @@ echo $this->Filter->end();
 
 if (!empty($users)){
     // start form tag
-    echo $this->AdminForm->startFormTag();
+    echo $this->AdminForm->startFormTag('User', array('manual' => true));
     //start table tag
     echo $this->Html->tag('table',null,array('class' => 'table table-bordered table-striped'));
     // th tag
@@ -84,14 +84,14 @@ if (!empty($users)){
             // Published
             $published = $this->AdminForm->item(
                 $this->Html->image('tick.png'),//title
-                array('action' => 'unPublish'),// url
+                array('action' => 'inactive'),// url
                 array('escape' => false, 'class' => 'btn active btn-small')//option
             );
         } else {
             // Non Published
             $published = $this->AdminForm->item(
                 $this->Html->image('publish_x.png'),
-                array('action' => 'publish'),
+                array('action' => 'active'),
                 array('escape' => false, 'class' => 'btn btn-small')
             );
         }

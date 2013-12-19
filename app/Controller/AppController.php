@@ -310,11 +310,14 @@ class AppController extends Controller {
             throw new MethodNotAllowedException(SettingsController::read('Error.Code-12'));
         }
         $id = $this->request->data['id'];
+		$obj = $this->{$model};
         $count = count($id);
         if ($count == 1) {
             $id = current($id);
-            $this->{$model}->id = $id;
-            if ($this->{$model}->saveField($field, $value)) {
+            $obj->id = $id;
+			if(! $obj->exists()){
+				$this->Session->setFlash(SettingsController::read('Error.Code-17'), 'message', array('type' => 'error'));
+			}elseif ($obj->saveField($field, $value)) {
                 $this->Session->setFlash($flashMessage, 'message', array('type' => 'success'));
             } else {
                 $this->Session->setFlash(SettingsController::read('Error.Code-17'), 'message', array('type' => 'error'));
@@ -322,8 +325,11 @@ class AppController extends Controller {
         } elseif ($count > 1) {
             $countAffected = 0;
             foreach ($id as $i) {
-                $this->{$model}->id = $i;
-                if ($this->{$model}->saveField($field, $value)) {
+                $obj->id = $i;
+				if(! $obj->exists()){
+					continue;
+				}
+                if ($obj->saveField($field, $value)) {
                     $countAffected++;
                 }
             }

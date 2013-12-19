@@ -21,9 +21,11 @@
             </div>
             <div class="span2">
                 <input type="submit" value="ورود"  />
+                <?php echo $this->Html->link('ثبت نام', array('controller' => 'User', 'action' => 'register', 'plugin' => 'Shop')); ?>
             </div>
         </div>
     </form>
+    
 </div>
 <?php else: ?>
 <div class="module">

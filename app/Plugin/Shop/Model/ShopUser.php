@@ -20,6 +20,40 @@ class ShopUser extends ShopAppModel {
         1 => 'فروشنده',
         2 => 'خریدار',
     );
+	
+	public $validate = array(
+		'address' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'تکمیل این فیلد ضروری است',
+			),
+		),
+		'phone' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'تکمیل این فیلد ضروری است',
+			),
+		),
+		'mobile' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'تکمیل این فیلد ضروری است',
+                'on' => 'create',
+			),
+		),
+        'code_posti' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'تکمیل این فیلد ضروری است',
+			),
+		),
+		'city' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				'message' => 'تکمیل این فیلد ضروری است',
+			),
+		),
+	);
     
     public function afterFind($results){
         if(empty($results)){
